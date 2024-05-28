@@ -3,7 +3,7 @@ body, html {
   height: 100%;
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #F8F9FA; /* Light grey background similar to ChatGPT */
+  background-color: #0a5096; /* Light grey background similar to ChatGPT */
 }
 
 /* Main Container Styling */
@@ -19,8 +19,8 @@ body, html {
   width: 40%;
   min-width: 300px;
   max-width: 650px;
-  background-color: white;
-  border: 1px solid #E0E0E0; /* Subtle border color */
+  background-color: #7dbdbd;
+  border: 1px solid #7dbdbd; /* Subtle border color */
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Softer shadow */
   display: flex;
@@ -29,11 +29,11 @@ body, html {
 }
 
 .card-header {
-  background-color: #FFFFFF; /* White background for the header */
+  background-color: #7dbdbd; /* White background for the header */
   color: #3C4043; /* Darker font color for contrast */
   padding: 16px 24px;
   font-size: 18px;
-  border-bottom: 1px solid #E0E0E0; /* Light border for separation */
+  border-bottom: 1px solid #7dbdbd; /* Light border for separation */
   text-align: center;
 }
 
@@ -70,8 +70,8 @@ body, html {
 .input-area {
   display: flex;
   padding: 16px 24px;
-  background: #FFFFFF; /* Matching the header background */
-  border-top: 1px solid #E0E0E0; /* Consistent with header border */
+  background: #7dbdbd; /* Matching the header background */
+  border-top: 1px solid #7dbdbd; /* Consistent with header border */
 }
 
 .chat-input {

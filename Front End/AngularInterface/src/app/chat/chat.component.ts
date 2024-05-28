@@ -25,4 +25,5 @@ export class ChatComponent {
       this.messages.push({ text: 'Echo: ' + message, user: false });
     }, 1000);
   }
+
 }

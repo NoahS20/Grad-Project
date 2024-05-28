@@ -1,0 +1,14 @@
+<!-- file-upload.component.html -->
+<div>
+  <!-- Button to trigger file input -->
+  <button class="file-upload-button" (click)="fileInput.click()" aria-label="Upload file">
+    📁 <!-- Unicode folder icon -->
+  </button>
+  <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+
+  <!-- Optional: Display file contents or file name below -->
+  <div *ngIf="fileContent" class="file-content">
+    <h4>File Contents:</h4>
+    <pre>{{ fileContent }}</pre>
+  </div>
+</div>

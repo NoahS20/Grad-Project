@@ -4,16 +4,18 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule here
 import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
 import { RouterModule } from '@angular/router';
+import { FileUploadComponent } from './file-upload/file-upload.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChatComponent
+    ChatComponent,
+    FileUploadComponent
   ],
   imports: [
     BrowserModule,
     RouterModule,
-    FormsModule  // Add FormsModule here
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

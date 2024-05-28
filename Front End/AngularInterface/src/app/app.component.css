@@ -3,8 +3,18 @@
   width: 80%;
   margin: 20px auto;
   text-align: center;
+  justify-content: center;  /* Centers children horizontally in the container */
+  align-items: start;  /* Aligns children at the top of the container */
+  gap: 20px;  /* Space between the components */
+  min-height: 100vh;
+  padding: 20px;
 }
 
 h1 {
-  color: #333;
+  color: hsl(180, 27%, 94%);
+}
+
+app-chat, app-file-upload {
+  flex: 1 1 300px;  /* Gives both components flexibility to grow and shrink, with a base width of 300px */
+  min-width: 300px;  /* Ensures that neither component becomes too small */
 }
