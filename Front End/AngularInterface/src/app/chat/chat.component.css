@@ -1,0 +1,98 @@
+/* General Reset and Base Styles */
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #F8F9FA; /* Light grey background similar to ChatGPT */
+}
+
+/* Main Container Styling */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Card Styling for Chat Box */
+.card {
+  width: 40%;
+  min-width: 300px;
+  max-width: 650px;
+  background-color: white;
+  border: 1px solid #E0E0E0; /* Subtle border color */
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Softer shadow */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: #FFFFFF; /* White background for the header */
+  color: #3C4043; /* Darker font color for contrast */
+  padding: 16px 24px;
+  font-size: 18px;
+  border-bottom: 1px solid #E0E0E0; /* Light border for separation */
+  text-align: center;
+}
+
+.card-body {
+  padding: 0 24px;
+  height: 500px;
+  overflow-y: auto;
+}
+
+/* Chat Message Styling */
+.message {
+  margin: 10px 0;
+  padding: 12px 16px;
+  border-radius: 16px;
+  color: white;
+  font-size: 16px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.user-message {
+  background-color: #007AFF; /* Vivid blue for user messages */
+  align-self: flex-end;
+  color: white; /* White text for readability */
+}
+
+.bot-message {
+  background-color: #E0E0E0; /* Light grey for bot messages */
+  color: black; /* Black text for contrast */
+  align-self: flex-start;
+}
+
+/* Input Area Styling */
+.input-area {
+  display: flex;
+  padding: 16px 24px;
+  background: #FFFFFF; /* Matching the header background */
+  border-top: 1px solid #E0E0E0; /* Consistent with header border */
+}
+
+.chat-input {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 2px solid #E0E0E0; /* Slightly thicker border for the input */
+  border-radius: 22px;
+  outline: none;
+}
+
+.send-button {
+  padding: 8px 16px;
+  margin-left: 10px;
+  background-color: #007AFF; /* Matching the user message color */
+  border: none;
+  border-radius: 22px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
+}
