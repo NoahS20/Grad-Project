@@ -4,26 +4,26 @@
   padding: 20px;
   background-color: #d65dc2;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-
-  margin: 20px auto;
+  margin: 20px;
   display: flex;
   flex-direction: column;
   position: fixed;
-  left: 0;
-  right: 0;
-
-  max-width: 1000px;
-    /* max-height:1000px; */
+  left: 21%;
+  top: 13%;
+  width: 50%;
+  /*max-height:1000px; */
   position: absolute;
+
 }
 
 .messages-display-area {
   width: 100%;  /* Adjust width as needed */
   /* max-height: 650px;   Or whatever maximum height you prefer */
   /* overflow-y: auto; Enables scrolling when content exceeds max height */
-  padding: 10px;  /* Adds padding inside the container */
+  padding: 1px;  /* Adds padding inside the container */
   word-wrap: break-word;  /* Ensures words break to prevent overflow */
   white-space: normal;  /* Ensures normal text wrapping is applied */
+  align-items: center;
 }
 
 .input-area {
@@ -62,7 +62,6 @@
   background-color: #007bff;
   color: white;
   padding: 6px 12px;
-  border-radius: 50%;
   cursor: pointer;
   outline: none;
   display: flex;
@@ -73,10 +72,49 @@
   -moz-border-radius: 50%;
   -ms-border-radius: 50%;
   -o-border-radius: 50%;
+  border-radius: 50%;
 }
 
 ::placeholder {
   top: 30%;
   vertical-align: middle;
   color: #007bff
+}
+
+.message {
+  --r: 1em;  /* the radius */
+  --t: 1.5em; /* the size of the tail */
+
+  max-width: 300px;
+  padding: 1em;
+  border-inline: var(--t) solid #0000;
+  border-radius: calc(var(--r) + var(--t))/var(--r);
+  mask:
+    radial-gradient(100% 100% at var(--_p) 0,#0000 99%,#000 102%)
+      var(--_p) 100%/var(--t) var(--t) no-repeat,
+    linear-gradient(#000 0 0) padding-box;
+  background: linear-gradient(135deg,#FE6D00,#1384C5) border-box;
+  color: #fff;
+
+  /* place-self: end; */
+}
+
+.user-message {
+  background-color: #007BFF;
+  color: white;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  --_p: 100%;
+  border-bottom-right-radius: 0 0;
+  margin: 5px 0;
+}
+
+.bot-message {
+  background-color: #EFEFEF;
+  color: black;
+  word-wrap: break-word;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+  --_p: 0;
+  border-bottom-left-radius: 0 0;
+  margin: 5px 0;
 }
