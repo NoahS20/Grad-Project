@@ -1,4 +1,4 @@
-<div class="chat-container">
+<div class="chat-container" #scrollContainer>
   <div class="messages-display-area">
     <div *ngFor="let message of messages" class="message" [ngClass]="{'user-message': message.user, 'bot-message': !message.user}">
       {{ message.text }}

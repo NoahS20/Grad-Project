@@ -13,13 +13,14 @@
   right: 0;
 
   max-width: 1000px;
-  max-height:1000px;
+    /* max-height:1000px; */
+  position: absolute;
 }
 
 .messages-display-area {
   width: 100%;  /* Adjust width as needed */
-  max-height: 650px;  /* Or whatever maximum height you prefer */
-  overflow-y: auto;  /* Enables scrolling when content exceeds max height */
+  /* max-height: 650px;   Or whatever maximum height you prefer */
+  /* overflow-y: auto; Enables scrolling when content exceeds max height */
   padding: 10px;  /* Adds padding inside the container */
   word-wrap: break-word;  /* Ensures words break to prevent overflow */
   white-space: normal;  /* Ensures normal text wrapping is applied */

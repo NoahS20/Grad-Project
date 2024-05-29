@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit, viewChild } from '@angular/core';
+import { AfterViewChecked, ElementRef, Component, OnDestroy, OnInit, ViewChild, PLATFORM_ID, Inject, HostListener } from '@angular/core';
 import { AutoResizeDirective } from '../directives/auto-resize.directive';
 import { fileTransferring } from '../file-transfer.service';
 import { Subscription } from 'rxjs';
-
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-chat',
@@ -10,13 +10,18 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./chat.component.css']
 })
 
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
   messages: any[] = [];
   inputMessage: string = '';
   message: any;
   subscription: Subscription = new Subscription;
+  @ViewChild('scrollContainer')
+  private scrollContainer!: ElementRef;
 
-  constructor(private dataService: fileTransferring) {}
+  constructor(
+    private dataService: fileTransferring,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {}
 
 
   sendMessage(textarea: HTMLTextAreaElement): void {
@@ -39,6 +44,10 @@ export class ChatComponent implements OnInit, OnDestroy {
     console.log("success");
   }
 
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
   ngOnInit() {
     this.subscription = this.dataService.currentData.subscribe(data => {
       this.message = data;  // Could be text or Base64 data
@@ -48,6 +57,21 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+  }
+
+  scrollToBottom(): void {
+    if (isPlatformBrowser(this.platformId) && this.scrollContainer) {
+      const element = this.scrollContainer.nativeElement;
+      const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
+      console.log(atBottom);
+      console.log(window.scrollY);
+      if (atBottom && window.scrollY != 0) {
+        // Only scroll to the bottom if the user is already at the bottom
+        if (typeof window !== "undefined") {
+          window.scrollTo(0,document.body.scrollHeight);
+        }
+      }
+    }
   }
 
 }
