@@ -5,12 +5,14 @@ import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
 import { RouterModule } from '@angular/router';
 import { FileUploadComponent } from './file-upload/file-upload.component';
+import { AutoResizeDirective } from './directives/auto-resize.directive';  // Import the directive here
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    AutoResizeDirective
   ],
   imports: [
     BrowserModule,

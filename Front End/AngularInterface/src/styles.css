@@ -1,6 +1,6 @@
 /* Set the background color of the whole page */
 body {
   background-color: #7dbdbd; /* Dark gray background */
-  color: #7dbdbd; /* Light color text for better readability on dark background */
+  color: #f3f5f5; /* Light color text for better readability on dark background */
   font-family: Arial, sans-serif; /* Optional: sets a consistent font for the site */
 }
