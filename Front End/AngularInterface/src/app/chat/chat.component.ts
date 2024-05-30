@@ -11,6 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 })
 
 export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
+  isProcessing: boolean = false;
   messages: any[] = [];
   inputMessage: string = '';
   message: any;
@@ -25,13 +26,18 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
 
 
   sendMessage(textarea: HTMLTextAreaElement): void {
-    this.scrollToBottom()
-    if (this.inputMessage.trim()) {
-      this.messages.push({ text: this.inputMessage, user: true });
-      this.respond(this.inputMessage);
-      this.inputMessage = '';  // Fixed typo here
-      textarea.style.height = '38px';  // Adjust this value to match your default size
-    }
+    this.isProcessing = true;
+    setTimeout(() => {
+      this.scrollToBottom();
+      if (this.inputMessage.trim()) {
+        this.messages.push({ text: this.inputMessage, user: true });
+        this.respond(this.inputMessage);
+        this.inputMessage = '';  // Fixed typo here
+        textarea.style.height = '38px';  // Adjust this value to match your default size
+      }
+      this.isProcessing = false;
+
+    }, 1000);
   }
 
   respond(message: string): void {

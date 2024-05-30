@@ -7,8 +7,8 @@
   <div class="input-area">
     <div class="input-wrapper">
       <!-- Using textarea instead of input -->
-      <textarea #textarea appAutoResize class="chat-input" [(ngModel)]="inputMessage" (keyup.enter)="sendMessage(textarea)" placeholder="Type a message..." autofocus rows="1"></textarea>
-      <button class="send-button" (click)="sendMessage(textarea)">↑</button>
+      <textarea #textarea appAutoResize class="chat-input" [disabled]="isProcessing" [(ngModel)]="inputMessage" (keyup.enter)="sendMessage(textarea)" placeholder="Type a message..." autofocus rows="1"></textarea>
+      <button class="send-button" [disabled]="isProcessing" (click)="sendMessage(textarea)">↑</button>
     </div>
   </div>
 </div>

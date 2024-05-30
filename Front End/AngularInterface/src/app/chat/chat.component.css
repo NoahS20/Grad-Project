@@ -13,7 +13,6 @@
   width: 50%;
   /*max-height:1000px; */
   position: absolute;
-
 }
 
 .messages-display-area {
@@ -23,12 +22,15 @@
   padding: 1px;  /* Adds padding inside the container */
   word-wrap: break-word;  /* Ensures words break to prevent overflow */
   white-space: normal;  /* Ensures normal text wrapping is applied */
-  align-items: center;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 .input-area {
   display: flex;
-  align-items: center;
+  align-items: right;
   padding: 10px;
   /* Additional space between input area and any other UI elements */
 }
@@ -84,8 +86,6 @@
 .message {
   --r: 1em;  /* the radius */
   --t: 1.5em; /* the size of the tail */
-
-  max-width: 300px;
   padding: 1em;
   border-inline: var(--t) solid #0000;
   border-radius: calc(var(--r) + var(--t))/var(--r);
@@ -107,6 +107,13 @@
   --_p: 100%;
   border-bottom-right-radius: 0 0;
   margin: 5px 0;
+
+  margin-left: auto; /* Pushes the bubble to the right */
+  max-width: 300px; /* Maximum width for the bubble */
+  padding: 1em; /* Padding inside the bubble */
+  display: flex; /* Ensures the contents are aligned using flexbox */
+  justify-content: center; /* Centers the text horizontally within the bubble */
+  align-self: flex-end;
 }
 
 .bot-message {
@@ -117,4 +124,11 @@
   --_p: 0;
   border-bottom-left-radius: 0 0;
   margin: 5px 0;
+
+  margin-right: auto; /* Pushes the bubble to the right */
+  max-width: 300px; /* Maximum width for the bubble */
+  padding: 1em; /* Padding inside the bubble */
+  display: flex; /* Ensures the contents are aligned using flexbox */
+  justify-content: center; /* Centers the text horizontally within the bubble */
+  align-self: flex-start;
 }
