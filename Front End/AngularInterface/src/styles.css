@@ -1,6 +1,9 @@
 /* Set the background color of the whole page */
 body {
-  background-color: #7dbdbd; /* Dark gray background */
-  color: #f3f5f5; /* Light color text for better readability on dark background */
+  background:url(../assets/towsonuniversity3.jpg)no-repeat center center fixed;
+  background-size: cover;  /* Cover the entire page */
+  background-position: center;  /* Center the background image */
+  background-repeat: no-repeat;  /* Do not repeat the image */
+
   font-family: Arial, sans-serif; /* Optional: sets a consistent font for the site */
 }

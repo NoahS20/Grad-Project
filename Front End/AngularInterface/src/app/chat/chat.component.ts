@@ -24,7 +24,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
-
   sendMessage(textarea: HTMLTextAreaElement): void {
     this.loading = true;
     this.scrollToBottom();
