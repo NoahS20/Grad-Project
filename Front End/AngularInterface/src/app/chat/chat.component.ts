@@ -11,7 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 })
 
 export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
-  isProcessing: boolean = false;
+  loading: boolean = false;
   messages: any[] = [];
   inputMessage: string = '';
   message: any;
@@ -26,24 +26,22 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
 
 
   sendMessage(textarea: HTMLTextAreaElement): void {
-    this.isProcessing = true;
-    setTimeout(() => {
-      this.scrollToBottom();
-      if (this.inputMessage.trim()) {
-        this.messages.push({ text: this.inputMessage, user: true });
-        this.respond(this.inputMessage);
-        this.inputMessage = '';  // Fixed typo here
-        textarea.style.height = '38px';  // Adjust this value to match your default size
-      }
-      this.isProcessing = false;
-
-    }, 1000);
+    this.loading = true;
+    this.scrollToBottom();
+    if (this.inputMessage.trim()) {
+      this.messages.push({ text: this.inputMessage, user: true });
+      this.respond(this.inputMessage);
+      this.inputMessage = '';  // Fixed typo here
+      textarea.style.height = '38px';  // Adjust this value to match your default size
+    }
+    this.loading = false;
   }
 
   respond(message: string): void {
     // Simulate a bot response
     setTimeout(() => {
       this.messages.push({ text: 'Echo: ' + message, user: false });
+      this.scrollToBottom();
     }, 1000);
     this.scrollToBottom();
   }
@@ -67,12 +65,17 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
     this.subscription.unsubscribe();
   }
 
+  onEnterKeyPress(event: any, textarea: HTMLTextAreaElement){
+    event.preventDefault();
+    this.sendMessage(textarea);
+}
+
   scrollToBottom(): void {
     if (typeof window !== "undefined") {
       console.log(window.scrollY);
       console.log(document.body.scrollHeight)
       if (window.scrollY > 0) {
-        if(window.scrollY > document.body.scrollHeight){
+        if(window.scrollY >= document.body.scrollHeight){
           window.scrollTo(0,document.body.scrollHeight + window.scrollY);
         }
         else{

@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   position: fixed;
-  left: 21%;
+  left: 24%;
   top: 13%;
   width: 50%;
   /*max-height:1000px; */
@@ -109,7 +109,7 @@
   margin: 5px 0;
 
   margin-left: auto; /* Pushes the bubble to the right */
-  max-width: 300px; /* Maximum width for the bubble */
+  /* max-width: 300px; Maximum width for the bubble */
   padding: 1em; /* Padding inside the bubble */
   display: flex; /* Ensures the contents are aligned using flexbox */
   justify-content: center; /* Centers the text horizontally within the bubble */
@@ -126,9 +126,30 @@
   margin: 5px 0;
 
   margin-right: auto; /* Pushes the bubble to the right */
-  max-width: 300px; /* Maximum width for the bubble */
+  /* max-width: 300px; Maximum width for the bubble */
   padding: 1em; /* Padding inside the bubble */
   display: flex; /* Ensures the contents are aligned using flexbox */
   justify-content: center; /* Centers the text horizontally within the bubble */
   align-self: flex-start;
+}
+
+
+@keyframes spinner {
+  to {transform: rotate(360deg);}
+}
+
+.spinner:before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  border-top-color: #000000;
+  animation: spinner .8s linear infinite;
 }

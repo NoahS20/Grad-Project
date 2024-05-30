@@ -12,8 +12,12 @@
   cursor: pointer;
   outline: none; /* Remove focus outline */
   transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+  position: fixed;
+
 }
 
 .file-upload-button:hover {
   background-color: #101010; /* Slightly darker shade on hover */
 }
+
