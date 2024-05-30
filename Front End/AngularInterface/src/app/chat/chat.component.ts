@@ -11,7 +11,7 @@ import { isPlatformBrowser } from '@angular/common';
 })
 
 export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
-  loading: boolean = false;
+  loading = false;
   messages: any[] = [];
   inputMessage: string = '';
   message: any;
@@ -28,12 +28,14 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
     this.loading = true;
     this.scrollToBottom();
     if (this.inputMessage.trim()) {
-      this.messages.push({ text: this.inputMessage, user: true });
-      this.respond(this.inputMessage);
-      this.inputMessage = '';  // Fixed typo here
-      textarea.style.height = '38px';  // Adjust this value to match your default size
+      setTimeout(() => {
+        this.messages.push({ text: this.inputMessage, user: true });
+        this.respond(this.inputMessage);
+        this.inputMessage = '';  // Fixed typo here
+        textarea.style.height = '38px';  // Adjust this value to match your default size
+        this.loading = false;
+      }, 1500);
     }
-    this.loading = false;
   }
 
   respond(message: string): void {
