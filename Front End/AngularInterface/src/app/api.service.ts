@@ -22,8 +22,9 @@ export class ApiService {
     return this.http.post<any>(this.apiUrl, JSON.stringify(data), { headers });
   }
 
-  upload_file(file: File): Observable<any> {
+  upload_file(fileName: string, fileContent: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.http.post<any>(this.fileUrl, JSON.stringify(file), { headers} );
+    const data = { fileName: fileName, fileContent: fileContent };
+    return this.http.post<any>(this.fileUrl, JSON.stringify(data), { headers });
   }
 }

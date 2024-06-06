@@ -20,14 +20,15 @@ def post_data():
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
-    if 'file' not in request.files:
-        return jsonify({"error": "No file part in the request"}), 400
+    if request.is_json:
+        data = request.get_json()
+        app.logger.debug(f"Request data: {data}")
+        file_name = data.get('fileName')
+        file_content = data.get('fileContent')
 
-    file = request.files['file']
-    if file.filename == '':
-        return jsonify({"error": "No selected file"}), 400
-
-    return jsonify({"message": "File uploaded successfully"}), 200
+        if not file_name or not file_content:
+            return jsonify({"error": "Invalid request, missing fileName or fileContent"}), 400
+        return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

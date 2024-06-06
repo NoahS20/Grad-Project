@@ -91,13 +91,6 @@ export class ChatComponent implements AfterViewChecked{
     this.sendFile(file);
   }
 
-  recieveFile(file:File): void {
-    this.apiService.getData().subscribe(response => {
-      this.filedata = response;
-      this.sendData(this.filedata);
-    });
-  }
-
   sendData(data:any): any {
     //const payload = { message: 'Hello from Angular!' };
     this.apiService.postData(data).subscribe(response => {
@@ -111,13 +104,25 @@ export class ChatComponent implements AfterViewChecked{
     });
   }
 
-  sendFile(data:File): any {
-    //const payload = { message: 'Hello from Angular!' };
-    this.apiService.upload_file(data).subscribe(response => {
-      console.log(response);
-      return response;
-    });
-
+  sendFile(fileSend:File): any {
+    if (fileSend) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        const base64Content = base64.split(',')[1];  // Remove the data URL part
+        this.apiService.upload_file(fileSend!.name, base64Content).subscribe(
+          response => {
+            console.log('File uploaded successfully', response);
+          },
+          error => {
+            console.error('Error uploading file', error);
+          }
+        );
+      };
+      reader.readAsDataURL(fileSend);
+    } else {
+      console.error('No file selected');
+    }
   }
 
 }
