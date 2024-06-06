@@ -1,5 +1,8 @@
+import base64
+import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import fileprocessing
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -20,6 +23,7 @@ def post_data():
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
+    content = ""
     if request.is_json:
         data = request.get_json()
         app.logger.debug(f"Request data: {data}")
@@ -28,7 +32,20 @@ def upload_file():
 
         if not file_name or not file_content:
             return jsonify({"error": "Invalid request, missing fileName or fileContent"}), 400
-        return jsonify(data)
+
+        try:
+            file_content = base64.b64decode(file_content)
+            file_path = os.path.join('Temp_Save', file_name)
+            with open(file_path, 'wb') as file:
+                file.write(file_content)
+                content = fileprocessing.readFile(file_name)
+            send = {"message": content}
+            return jsonify(send)
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    else:
+        return jsonify({"error": "Invalid content type, must be application/json"}), 400
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
