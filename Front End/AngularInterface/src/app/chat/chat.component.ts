@@ -3,6 +3,8 @@ import { AutoResizeDirective } from '../directives/auto-resize.directive';
 import { fileTransferring } from '../file-transfer.service';
 import { Subscription } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-chat',
@@ -10,8 +12,9 @@ import { isPlatformBrowser } from '@angular/common';
   styleUrls: ['./chat.component.css']
 })
 
-export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
+export class ChatComponent implements AfterViewChecked{
   loading = false;
+  filedata: any;
   messages: any[] = [];
   inputMessage: string = '';
   message: any;
@@ -22,6 +25,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
   constructor(
     private dataService: fileTransferring,
     @Inject(PLATFORM_ID) private platformId: Object,
+    private apiService: ApiService
   ) {}
 
   sendMessage(textarea: HTMLTextAreaElement): void {
@@ -30,11 +34,11 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
     if (this.inputMessage.trim()) {
       setTimeout(() => {
         this.messages.push({ text: this.inputMessage, user: true });
-        this.respond(this.inputMessage);
+        this.sendData(this.inputMessage);
         this.inputMessage = '';  // Fixed typo here
         textarea.style.height = '38px';  // Adjust this value to match your default size
         this.loading = false;
-      }, 1500);
+      }, 2000);
     }
   }
 
@@ -45,10 +49,6 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
       this.scrollToBottom();
     }, 1000);
     this.scrollToBottom();
-  }
-
-  respondFile(file: File): void {
-    console.log("success");
   }
 
   ngAfterViewChecked() {
@@ -84,6 +84,40 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked{
         }
       }
     }
+  }
+
+  respondFile(file: File): void {
+    console.log("success");
+    this.sendFile(file);
+  }
+
+  recieveFile(file:File): void {
+    this.apiService.getData().subscribe(response => {
+      this.filedata = response;
+      this.sendData(this.filedata);
+    });
+  }
+
+  sendData(data:any): any {
+    //const payload = { message: 'Hello from Angular!' };
+    this.apiService.postData(data).subscribe(response => {
+      console.log(response);
+      return response;
+    });
+
+    this.apiService.getData().subscribe(dataGrab => {
+      console.log(dataGrab);
+      return dataGrab;
+    });
+  }
+
+  sendFile(data:File): any {
+    //const payload = { message: 'Hello from Angular!' };
+    this.apiService.upload_file(data).subscribe(response => {
+      console.log(response);
+      return response;
+    });
+
   }
 
 }

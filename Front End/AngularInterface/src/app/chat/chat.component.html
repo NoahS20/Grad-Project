@@ -6,8 +6,9 @@
   </div>
   <div class="input-area">
     <div class="input-wrapper">
-      <!--For below: [disabled]="isProcessing" and  -->
+      <!--For below: [disabled]="loading" and  -->
       <textarea #textarea
+        [disabled]="loading"
         appAutoResize class="chat-input"
         (input)="scrollToBottom()"
         (keydown.enter)= 'onEnterKeyPress($event,textarea)'

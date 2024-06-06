@@ -6,6 +6,8 @@ import { ChatComponent } from './chat/chat.component';
 import { RouterModule } from '@angular/router';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { AutoResizeDirective } from './directives/auto-resize.directive';  // Import the directive here
+import { ApiService } from './api.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -17,9 +19,10 @@ import { AutoResizeDirective } from './directives/auto-resize.directive';  // Im
   imports: [
     BrowserModule,
     RouterModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [ApiService],
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
