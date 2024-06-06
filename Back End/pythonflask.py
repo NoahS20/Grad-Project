@@ -32,20 +32,23 @@ def upload_file():
 
         if not file_name or not file_content:
             return jsonify({"error": "Invalid request, missing fileName or fileContent"}), 400
-
+        '''
         try:
             file_content = base64.b64decode(file_content)
             file_path = os.path.join('Temp_Save', file_name)
             with open(file_path, 'wb') as file:
                 file.write(file_content)
                 content = fileprocessing.readFile(file_name)
-            send = {"message": content}
-            return jsonify(send)
+                send = {"message": content}
+                return jsonify(send)
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+        '''
+        file_path = os.path.join('Temp_Save', file_name)
+        return jsonify({"Message" : fileprocessing.readFile(file_content, file_path, file_name)})
+
     else:
         return jsonify({"error": "Invalid content type, must be application/json"}), 400
-
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
