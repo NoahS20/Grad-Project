@@ -31,7 +31,7 @@ def readtxt(file_path):
             for line in file:
                 contents = contents + line.rstrip('\n')
             print(contents)
-            os.remove('/' + file_path)
+            #os.remove('/' + file_path)
             return contents
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
@@ -47,7 +47,7 @@ def readdoc(file_path):
         contents = textract.process(file_path)
         contents = contents.decode("utf8")
         print(contents)
-        os.remove('/' + file_path)
+        #os.remove('/' + file_path)
         return contents
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
@@ -68,7 +68,7 @@ def readpdf(file_path):
             text = text + page.extract_text()
             counter+=1
         print(text)
-        os.remove('/' + file_path)
+        #os.remove('/' + file_path)
         return text
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."

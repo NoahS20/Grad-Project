@@ -54,7 +54,7 @@ def upload_file():
             return jsonify({"error": str(e)}), 500
         '''
         file_path = os.path.join('Temp_Save', file_name)
-        return jsonify({"Message" : fileprocessing.readFile(file_content, file_path, file_name)})
+        return jsonify({"FileData" : fileprocessing.readFile(file_content, file_path, file_name)})
 
     else:
         return jsonify({"error": "Invalid content type, must be application/json"}), 400
