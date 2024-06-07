@@ -42,7 +42,7 @@ export class ChatComponent implements AfterViewChecked{
     }
   }
 
-  respond(message: string): void {
+  respond(message: any): void {
     // Simulate a bot response
     setTimeout(() => {
       this.messages.push({ text: 'Echo: ' + message, user: false });
@@ -95,11 +95,13 @@ export class ChatComponent implements AfterViewChecked{
     //const payload = { message: 'Hello from Angular!' };
     this.apiService.postData(data).subscribe(response => {
       console.log(response);
+      this.respond(response)
       return response;
     });
 
     this.apiService.getData().subscribe(dataGrab => {
       console.log(dataGrab);
+      this.respond(dataGrab)
       return dataGrab;
     });
   }
@@ -113,6 +115,7 @@ export class ChatComponent implements AfterViewChecked{
         this.apiService.upload_file(fileSend!.name, base64Content).subscribe(
           response => {
             console.log('File uploaded successfully', response);
+            this.respond(response)
           },
           error => {
             console.error('Error uploading file', error);

@@ -1,2 +1,0 @@
-Notes: give architectural view of the entire system
-discuss implementation

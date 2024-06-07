@@ -1,0 +1,5 @@
+Notes: give architectural view of the entire system
+discuss implementation
+
+create shared document that has system structure (mine) and a link to the github, check with guy in email group to 
+figure out how training is going to work and if it can be done remotely

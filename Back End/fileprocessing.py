@@ -12,10 +12,6 @@ def readFile(filecontent, filepath, filename):
     print(filepath)
     print(filename)
 
-    '''
-    if filename.endswith(('.doc')):
-        text = textract.process(file)
-    '''
     if(result != "success"):
         return result, 500
 
@@ -35,6 +31,7 @@ def readtxt(file_path):
             for line in file:
                 contents = contents + line.rstrip('\n')
             print(contents)
+            os.remove('/' + file_path)
             return contents
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
@@ -50,6 +47,7 @@ def readdoc(file_path):
         contents = textract.process(file_path)
         contents = contents.decode("utf8")
         print(contents)
+        os.remove('/' + file_path)
         return contents
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
@@ -70,6 +68,7 @@ def readpdf(file_path):
             text = text + page.extract_text()
             counter+=1
         print(text)
+        os.remove('/' + file_path)
         return text
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
@@ -89,5 +88,3 @@ def saveFile(file_content, file_path, file_name):
                 return "success"
         except Exception as e:
             return ({"error": str(e)}, e)
-
-#readFile("test123.txt")

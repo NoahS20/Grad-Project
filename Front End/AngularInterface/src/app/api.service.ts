@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
 
-  private apiUrl = 'http://localhost:5000/api/data';  // Flask URL
-  private fileUrl = 'http://localhost:5000/api/upload';
+  private apiUrl = 'https://localhost:5000/api/data';  // Flask URL
+  private fileUrl = 'https://localhost:5000/api/upload';
   //private apiUrl = 'http://localhost:8000/api/data';  // Django URL
 
   constructor(private http: HttpClient) { }
