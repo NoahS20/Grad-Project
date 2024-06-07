@@ -2,6 +2,7 @@ import base64
 import textract
 import os
 import time
+import pypdf
 
 def readFile(filecontent, filepath, filename):
     result = saveFile(filecontent, filepath, filename)
@@ -19,9 +20,13 @@ def readFile(filecontent, filepath, filename):
         return result, 500
 
     if filename.endswith(('.txt')):
-        return(readtxt(filepath, filename))
+        return(readtxt(filepath))
+    elif filename.endswith(('.doc','.docx')):
+        return readdoc(filepath)
+    elif filename.endswith(('.pdf')):
+        return readpdf(filepath)
 
-def readtxt(file_path, filename):
+def readtxt(file_path):
     print(os.path.isfile(file_path))
     contents = ""
     checkIfDOne(file_path)
@@ -35,6 +40,41 @@ def readtxt(file_path, filename):
         return f"Error: The file at {file_path} was not found."
     except IOError:
         return f"Error: An error occurred while reading the file at {file_path}."
+    
+def readdoc(file_path):
+    contents = ""
+    checkIfDOne(file_path)
+    print(os.path.isfile(file_path))
+    try:
+      with open(file_path, 'r') as file:
+        contents = textract.process(file_path)
+        contents = contents.decode("utf8")
+        print(contents)
+        return contents
+    except FileNotFoundError:
+        return f"Error: The file at {file_path} was not found."
+    except IOError:
+        return f"Error: An error occurred while reading the file at {file_path}."
+
+def readpdf(file_path):
+    contents = ""
+    text = ''
+    counter = 0
+    checkIfDOne(file_path)
+    print(os.path.isfile(file_path))
+    try:
+      with open(file_path, 'r') as file:
+        contents = pypdf.PdfReader(file_path) 
+        while counter < len(contents.pages):
+            page = contents.pages[counter] 
+            text = text + page.extract_text()
+            counter+=1
+        print(text)
+        return text
+    except FileNotFoundError:
+        return f"Error: The file at {file_path} was not found."
+    except IOError:
+        return f"Error: An error occurred while reading the file at {file_path}." 
 
 def checkIfDOne(file_path):
     while (os.path.isfile(file_path) == False):
