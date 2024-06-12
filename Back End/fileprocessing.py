@@ -20,6 +20,8 @@ def readFile(filecontent, filepath, filename):
         return readdoc(filepath)
     elif filename.endswith(('.pdf')):
         return readpdf(filepath)
+    else:
+        return "Invalid filetype. Please enter a file with an extension of .txt, .doc, .docx, or .pdf"
 
 def readtxt(file_path):
     print(os.path.isfile(file_path))

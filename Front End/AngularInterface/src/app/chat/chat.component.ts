@@ -45,7 +45,7 @@ export class ChatComponent implements AfterViewChecked{
   respond(message: any): void {
     // Simulate a bot response
     setTimeout(() => {
-      this.messages.push({ text: 'Echo: ' + message, user: false });
+      this.messages.push({ text: 'Back End Response: ' + message, user: false });
       this.scrollToBottom();
     }, 1000);
     this.scrollToBottom();
