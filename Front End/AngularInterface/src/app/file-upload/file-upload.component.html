@@ -1,10 +1,19 @@
 <!-- file-upload.component.html -->
-<div>
+<div class="button-container">
   <!-- Button to trigger file input -->
-  <button class="file-upload-button" (click)="fileInput.click()" aria-label="Upload file">
-    📁 <!-- Unicode folder icon -->
-  </button>
+  <button class="file-upload-button" (click)="fileInput.click()" aria-label="Upload file"> 📁 <!-- Unicode folder icon --></button>
   <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+  <!-- Optional: Display file contents or file name below -->
+  <div *ngIf="fileContent" class="file-content">
+    <h4>File Contents:</h4>
+    <pre>{{ fileContent }}</pre>
+  </div>
+</div>
+
+<div class="button-container">
+  <!-- Button to trigger question input -->
+  <button class="Question-upload-button" (click)="fileInput.click()" aria-label="Upload Question"> Q <!-- Unicode folder icon --></button>
+  <input type="file" #fileInput hidden (change)="onQuestionSelected($event)">
 
   <!-- Optional: Display file contents or file name below -->
   <div *ngIf="fileContent" class="file-content">
@@ -12,3 +21,6 @@
     <pre>{{ fileContent }}</pre>
   </div>
 </div>
+
+
+

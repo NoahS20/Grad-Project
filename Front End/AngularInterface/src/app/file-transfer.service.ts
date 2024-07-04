@@ -7,11 +7,17 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class fileTransferring {
   private dataSource = new BehaviorSubject<any>("");  // Can be string or any other data type
+  private questionSource = new BehaviorSubject<any>("");  // Can be string or any other data type
   currentData = this.dataSource.asObservable();
+  question = this.questionSource.asObservable();
 
   constructor() { }
 
   fileTransfer(file: File) {
     this.dataSource.next(file);
+  }
+
+  questionTransfer(file: File){
+    this.questionSource.next(file);
   }
 }

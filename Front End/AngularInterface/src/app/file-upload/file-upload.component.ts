@@ -16,22 +16,22 @@ export class FileUploadComponent {
       this.readFile(file);
     }
   }
-/*
-  private readFile(file: File): void {
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.fileContent = reader.result;
-    };
-    reader.readAsText(file);
-    this.fileT.fileTransfer(file);
-    // Adjust this method based on the file type, e.g., readAsDataURL for images
+
+  onQuestionSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.readQuestion(file);
+    }
   }
-  */
 
   private readFile(file: File): void {
     this.fileT.fileTransfer(file);
     // Adjust this method based on the file type, e.g., readAsDataURL for images
   }
 
+  private readQuestion(file: File): void {
+    this.fileT.questionTransfer(file);
+    // Adjust this method based on the file type, e.g., readAsDataURL for images
+  }
 
 }

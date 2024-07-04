@@ -21,6 +21,7 @@ export class ChatComponent implements AfterViewChecked{
   subscription: Subscription = new Subscription;
   @ViewChild('scrollContainer')
   private scrollContainer!: ElementRef;
+  firstTime = true;
 
   constructor(
     private dataService: fileTransferring,
@@ -52,6 +53,10 @@ export class ChatComponent implements AfterViewChecked{
   }
 
   ngAfterViewChecked() {
+    if(this.firstTime == true){
+      this.messages.push({ text: 'Thank you for using this app! Before inputting the response to be checked make sure the question that you want the answer checked for is loaded by clicking the green Q button', user: false });
+      this.firstTime = false;
+    }
     this.scrollToBottom();
   }
 
@@ -60,6 +65,13 @@ export class ChatComponent implements AfterViewChecked{
       this.message = data;  // Could be text or Base64 data
       this.respondFile(this.message);
     });
+  }
+
+  ngQuestionOnInit(){
+    this.subscription = this.dataService.question.subscribe(data => {
+      this.message = data;
+      this.respondQuestion(this.message)
+    })
   }
 
   ngOnDestroy() {
@@ -91,6 +103,11 @@ export class ChatComponent implements AfterViewChecked{
     this.sendFile(file);
   }
 
+  respondQuestion(file: File): void {
+    console.log("recieved question");
+    this.sendQuestion(file)
+  }
+
   sendData(data:any): any {
     //const payload = { message: 'Hello from Angular!' };
     this.apiService.postData(data).subscribe(response => {
@@ -104,6 +121,28 @@ export class ChatComponent implements AfterViewChecked{
       this.respond(dataGrab.message)
       return dataGrab;
     });
+  }
+
+  sendQuestion(fileSend:File): any {
+    if (fileSend) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        const base64Content = base64.split(',')[1];  // Remove the data URL part
+        this.apiService.upload_question(fileSend!.name, base64Content).subscribe(
+          response => {
+            console.log('File uploaded successfully', response);
+            this.respond(response.FileData)
+          },
+          error => {
+            console.error('Error uploading file', error);
+          }
+        );
+      };
+      reader.readAsDataURL(fileSend);
+    } else {
+      console.error('No file selected');
+    }
   }
 
   sendFile(fileSend:File): any {

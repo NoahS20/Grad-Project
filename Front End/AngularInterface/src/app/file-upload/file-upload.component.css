@@ -17,7 +17,33 @@
 
 }
 
+.Question-upload-button {
+  background-color: #090909; /* Light gray background */
+  color: #78be91; /* Darker text color for contrast */
+  border: none; /* No border */
+  border-radius: 50%; /* Make it round */
+  width: 40px; /* Fixed width */
+  height: 40px; /* Fixed height to maintain the circle shape */
+  display: flex;
+  right: 100px;
+  justify-content: center; /* Center the icon horizontally */
+  align-items: center; /* Center the icon vertically */
+  font-size: 20px; /* Adjust the size of the icon */
+  cursor: pointer;
+  outline: none; /* Remove focus outline */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+  position: fixed;
+
+}
+
+
+
 .file-upload-button:hover {
-  background-color: #101010; /* Slightly darker shade on hover */
+  background-color: #686767; /* Slightly darker shade on hover */
+}
+
+.Question-upload-button:hover {
+  background-color: #c2cdc6; /* Slightly darker shade on hover */
 }
 

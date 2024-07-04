@@ -78,6 +78,10 @@
   border-radius: 50%;
 }
 
+.send-button:hover {
+  background-color: #67a2c5; /* Slightly darker shade on hover */
+}
+
 ::placeholder {
   top: 30%;
   vertical-align: middle;
