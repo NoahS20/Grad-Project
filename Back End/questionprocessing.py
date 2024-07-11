@@ -1,6 +1,7 @@
 import base64
 import os
 import time
+import getAIResponse
 
 def readFile(filecontent, filepath, filename):
     result = saveFile(filecontent, filepath, filename)
@@ -13,7 +14,9 @@ def readFile(filecontent, filepath, filename):
         return result, 500
 
     if filename.endswith(('.txt')):
-        return(readtxt(filepath))
+        question = readtxt(filepath)
+        getAIResponse.send_request(question)
+        return question
     else:
         return "Invalid filetype for question. Please enter a file with an extension of .txt"
 
