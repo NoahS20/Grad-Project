@@ -15,8 +15,8 @@ def readFile(filecontent, filepath, filename):
 
     if filename.endswith(('.txt')):
         question = readtxt(filepath)
-        getAIResponse.send_request(question)
-        return question
+        result = getAIResponse.send_request(question)
+        return result
     else:
         return "Invalid filetype for question. Please enter a file with an extension of .txt"
 
