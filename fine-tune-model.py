@@ -41,6 +41,10 @@ def compute_similarity_and_reasoning(model, tokenizer, prompt, text1, text2):
     with torch.no_grad():
         outputs1 = model(**inputs1).logits
         outputs2 = model(**inputs2).logits
+        
+    # Apply temperature scaling (temperature=0) to logits
+    outputs1 = outputs1 / 1e-6  # To avoid division by zero
+    outputs2 = outputs2 / 1e-6
 
     # Calculate similarity score using cosine similarity
     similarity_score = F.cosine_similarity(outputs1, outputs2).item()
@@ -74,7 +78,6 @@ def main():
         per_device_eval_batch_size=16,
         warmup_steps=500,
         weight_decay=0.01,
-        temperature=0,
         logging_dir='./logs',
         logging_steps=10,
         save_strategy="epoch",  # Save checkpoint at end of each epoch
