@@ -82,7 +82,7 @@ def upload_question():
         file_path = os.path.join('Temp_Save', file_name)
         #content = jsonify({"FileData" : questionprocessing.readFile(file_content, file_path, file_name)})
         result = questionprocessing.readFile(file_content, file_path, file_name)
-        #os.remove(file_path)
+        os.remove(file_path)
         return jsonify({"Result": result})
     else:
         return jsonify({"error": "Invalid content type, must be application/json"}), 400
