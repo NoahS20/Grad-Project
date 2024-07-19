@@ -65,6 +65,11 @@ export class ChatComponent implements AfterViewChecked{
       this.message = data;  // Could be text or Base64 data
       this.respondFile(this.message);
     });
+
+    this.subscription = this.dataService.question.subscribe(data => {
+      this.message = data;
+      this.respondQuestion(this.message)
+    });
   }
 
   ngQuestionOnInit(){

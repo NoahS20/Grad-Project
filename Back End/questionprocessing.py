@@ -9,11 +9,10 @@ def readFile(filecontent, filepath, filename):
     print(filepath)
     print(filename)
 
-    if(result != "success"):
-        return result, 500
-
     if filename.endswith(('.txt')):
         result = saveFile(filecontent, filepath, filename)
+        if(result != "success"):
+            return result
         #question = readtxt('Back End/Temp_Save/questions.txt')
         #result = getAIResponse.send_request(question)
         return result
@@ -42,9 +41,11 @@ def checkIfDOne(file_path):
 def saveFile(file_content, file_path, file_name):
         try:
             file_content = base64.b64decode(file_content)
-            file_path = './Temp_Save/questions.txt'
+            question_path = os.path.join('./Temp_Save/questions.txt')
+            file_path = os.path.join('Temp_Save', file_name)
             with open(file_path, 'w') as file:
-                file.write(file_content)
-                return "Question Uploaded"
+                content = readtxt(file_path)
+                file.write(content)
+                return "Question upload success"
         except Exception as e:
             return ({"message": str(e)}, e)

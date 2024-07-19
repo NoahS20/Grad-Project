@@ -13,7 +13,6 @@ export class FileUploadComponent {
 
 
   onFileSelected(event: any): void {
-    console.log("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
     const file: File = event.target.files[0];
     if (file) {
       this.readFile(file);
