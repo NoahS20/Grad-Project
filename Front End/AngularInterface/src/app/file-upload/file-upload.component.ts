@@ -9,8 +9,11 @@ import { fileTransferring } from '../file-transfer.service';
 export class FileUploadComponent {
   constructor(private fileT: fileTransferring) {}
   fileContent: string | ArrayBuffer | null = null;
+  questionContent: string | ArrayBuffer | null = null;
+
 
   onFileSelected(event: any): void {
+    console.log("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
     const file: File = event.target.files[0];
     if (file) {
       this.readFile(file);

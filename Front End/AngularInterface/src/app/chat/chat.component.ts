@@ -68,10 +68,11 @@ export class ChatComponent implements AfterViewChecked{
   }
 
   ngQuestionOnInit(){
+    console.log("Step")
     this.subscription = this.dataService.question.subscribe(data => {
       this.message = data;
       this.respondQuestion(this.message)
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -112,15 +113,15 @@ export class ChatComponent implements AfterViewChecked{
     //const payload = { message: 'Hello from Angular!' };
     this.apiService.postData(data).subscribe(response => {
       console.log(response);
-      this.respond(response.received_data)
+      this.respond(response.Verdict)
       return response;
     });
-
+    /*
     this.apiService.getData().subscribe(dataGrab => {
       console.log(dataGrab);
       this.respond(dataGrab.message)
       return dataGrab;
-    });
+    });*/
   }
 
   sendQuestion(fileSend:File): any {
@@ -131,17 +132,17 @@ export class ChatComponent implements AfterViewChecked{
         const base64Content = base64.split(',')[1];  // Remove the data URL part
         this.apiService.upload_question(fileSend!.name, base64Content).subscribe(
           response => {
-            console.log('File uploaded successfully', response);
-            this.respond(response.FileData)
+            console.log('Question uploaded successfully', response);
+            this.respond(response.Result)
           },
           error => {
-            console.error('Error uploading file', error);
+            console.error('Error uploading question', error);
           }
         );
       };
       reader.readAsDataURL(fileSend);
     } else {
-      console.error('No file selected');
+      console.error('No question selected');
     }
   }
 
@@ -154,7 +155,7 @@ export class ChatComponent implements AfterViewChecked{
         this.apiService.upload_file(fileSend!.name, base64Content).subscribe(
           response => {
             console.log('File uploaded successfully', response);
-            this.respond(response.FileData)
+            this.respond(response.Verdict)
           },
           error => {
             console.error('Error uploading file', error);

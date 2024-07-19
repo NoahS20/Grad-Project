@@ -10,15 +10,15 @@
   </div>
 </div>
 
-<div class="button-container">
+<div class="question-container">
   <!-- Button to trigger question input -->
-  <button class="Question-upload-button" (click)="fileInput.click()" aria-label="Upload Question"> Q <!-- Unicode folder icon --></button>
-  <input type="file" #fileInput hidden (change)="onQuestionSelected($event)">
+  <button class="Question-upload-button" (click)="questionInput.click()" aria-label="Upload Question"> Q <!-- Unicode folder icon --></button>
+  <input type="file" #questionInput hidden (change)="onQuestionSelected($event)">
 
   <!-- Optional: Display file contents or file name below -->
-  <div *ngIf="fileContent" class="file-content">
-    <h4>File Contents:</h4>
-    <pre>{{ fileContent }}</pre>
+  <div *ngIf="questionContent" class="file-content">
+    <h4>Question Contents:</h4>
+    <pre>{{ questionContent }}</pre>
   </div>
 </div>
 

@@ -4,7 +4,6 @@ import time
 import getAIResponse
 
 def readFile(filecontent, filepath, filename):
-    result = saveFile(filecontent, filepath, filename)
     filepath = 'Temp_Save/'
     filepath = filepath + filename
     print(filepath)
@@ -14,8 +13,9 @@ def readFile(filecontent, filepath, filename):
         return result, 500
 
     if filename.endswith(('.txt')):
-        question = readtxt(filepath)
-        result = getAIResponse.send_request(question)
+        result = saveFile(filecontent, filepath, filename)
+        #question = readtxt('Back End/Temp_Save/questions.txt')
+        #result = getAIResponse.send_request(question)
         return result
     else:
         return "Invalid filetype for question. Please enter a file with an extension of .txt"
@@ -42,9 +42,9 @@ def checkIfDOne(file_path):
 def saveFile(file_content, file_path, file_name):
         try:
             file_content = base64.b64decode(file_content)
-            file_path = os.path.join('Temp_Save', file_name)
-            with open(file_path, 'wb') as file:
+            file_path = './Temp_Save/questions.txt'
+            with open(file_path, 'w') as file:
                 file.write(file_content)
-                return "success"
+                return "Question Uploaded"
         except Exception as e:
             return ({"message": str(e)}, e)

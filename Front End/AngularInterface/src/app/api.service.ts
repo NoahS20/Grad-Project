@@ -14,9 +14,11 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
+  /*
   getData(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
   }
+    */
 
   postData(data: any): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
