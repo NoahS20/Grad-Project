@@ -47,7 +47,7 @@ def saveFile(file_content, file_path, file_name):
                 file.write(file_content)
                 #print(file_content)
                 saveQuestion(file_path, file_content)
-                return "Question upload success"
+                return "Question file: " + file_name + "upload success"
         except Exception as e:
             return ({"message": str(e)}, e)
         
@@ -55,8 +55,8 @@ def saveQuestion(file_path, file_content):
     try:
         question_path = os.path.join('Temp_Save', 'questionsFORAI129.txt')
         question_file = open(question_path, 'wb')
-        print(file_path)
-        print(file_content)
+        #print(file_path)
+        #print(file_content)
         question_file.write(file_content)
     except Exception as e:
         return ({"message": str(e)}, e)

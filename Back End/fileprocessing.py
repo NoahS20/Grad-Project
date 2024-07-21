@@ -8,8 +8,8 @@ def readFile(filecontent, filepath, filename):
     result = saveFile(filecontent, filepath, filename)
     filepath = 'Temp_Save/'
     filepath = filepath + filename
-    print(filepath)
-    print(filename)
+    #print(filepath)
+    #print(filename)
 
     if(result != "success"):
         return result, 500
@@ -31,7 +31,7 @@ def readtxt(file_path):
         with open(file_path, 'r') as file:
             for line in file:
                 contents = contents + line.rstrip('\n')
-            print(contents)
+            #print(contents)
             return contents
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
@@ -41,12 +41,12 @@ def readtxt(file_path):
 def readdoc(file_path):
     contents = ""
     checkIfDOne(file_path)
-    print(os.path.isfile(file_path))
+    #print(os.path.isfile(file_path))
     try:
       with open(file_path, 'r') as file:
         contents = textract.process(file_path)
         contents = contents.decode("utf8")
-        print(contents)
+        #print(contents)
         return contents
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
@@ -58,7 +58,7 @@ def readpdf(file_path):
     text = ''
     counter = 0
     checkIfDOne(file_path)
-    print(os.path.isfile(file_path))
+    #print(os.path.isfile(file_path))
     try:
       with open(file_path, 'r') as file:
         contents = pypdf.PdfReader(file_path) 
@@ -66,7 +66,7 @@ def readpdf(file_path):
             page = contents.pages[counter] 
             text = text + page.extract_text()
             counter+=1
-        print(text)
+        #print(text)
         return text
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
