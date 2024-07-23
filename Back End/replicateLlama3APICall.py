@@ -1,5 +1,5 @@
 import os
-os.environ['REPLICATE_API_TOKEN'] = ''
+
 import replicate
 
 def askLlama3(user_input, ai_input, questions):
@@ -23,9 +23,6 @@ def askLlama3(user_input, ai_input, questions):
             "log_performance_metrics": False
         },
     )
-        #print(str(event))
-        #content = str(event)
-        #print(content, end="")
     for contents in content:
         formatted_content = formatted_content + contents
     print(formatted_content)

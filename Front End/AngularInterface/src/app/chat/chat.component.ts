@@ -39,7 +39,7 @@ export class ChatComponent implements AfterViewChecked{
         this.inputMessage = '';  // Fixed typo here
         textarea.style.height = '38px';  // Adjust this value to match your default size
         this.loading = false;
-      }, 2000);
+      }, 9125);
     }
   }
 
@@ -115,18 +115,11 @@ export class ChatComponent implements AfterViewChecked{
   }
 
   sendData(data:any): any {
-    //const payload = { message: 'Hello from Angular!' };
     this.apiService.postData(data).subscribe(response => {
       console.log(response);
       this.respond(response.Verdict)
       return response;
     });
-    /*
-    this.apiService.getData().subscribe(dataGrab => {
-      console.log(dataGrab);
-      this.respond(dataGrab.message)
-      return dataGrab;
-    });*/
   }
 
   sendQuestion(fileSend:File): any {
@@ -137,17 +130,17 @@ export class ChatComponent implements AfterViewChecked{
         const base64Content = base64.split(',')[1];  // Remove the data URL part
         this.apiService.upload_question(fileSend!.name, base64Content).subscribe(
           response => {
-            console.log('Question uploaded successfully', response);
+            console.log('Question uploaded successfully ', response);
             this.respond(response.Result)
           },
           error => {
-            console.error('Error uploading question', error);
+            console.error('Error uploading question ', error);
           }
         );
       };
       reader.readAsDataURL(fileSend);
     } else {
-      console.error('No question selected');
+      console.error('No question selected ');
     }
   }
 

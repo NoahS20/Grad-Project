@@ -31,7 +31,6 @@ def readtxt(file_path):
         with open(file_path, 'r') as file:
             for line in file:
                 contents = contents + line.rstrip('\n')
-            #print(contents)
             return contents
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
@@ -41,12 +40,10 @@ def readtxt(file_path):
 def readdoc(file_path):
     contents = ""
     checkIfDOne(file_path)
-    #print(os.path.isfile(file_path))
     try:
       with open(file_path, 'r') as file:
         contents = textract.process(file_path)
         contents = contents.decode("utf8")
-        #print(contents)
         return contents
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."
@@ -58,7 +55,6 @@ def readpdf(file_path):
     text = ''
     counter = 0
     checkIfDOne(file_path)
-    #print(os.path.isfile(file_path))
     try:
       with open(file_path, 'r') as file:
         contents = pypdf.PdfReader(file_path) 
@@ -66,7 +62,6 @@ def readpdf(file_path):
             page = contents.pages[counter] 
             text = text + page.extract_text()
             counter+=1
-        #print(text)
         return text
     except FileNotFoundError:
         return f"Error: The file at {file_path} was not found."

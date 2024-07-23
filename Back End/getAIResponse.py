@@ -1,7 +1,7 @@
 from openai import OpenAI
 
 client = OpenAI(
-    api_key = ''
+    
 )
 
 def send_request(questions):
