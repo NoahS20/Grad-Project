@@ -42,16 +42,16 @@ def readtxt(file_path):
     except IOError:
         return f"Error: An error occurred while reading the file at {file_path}."
 
-def sendFile(questionfile, answerfile):
+def sendFile(question_file_name, question_file_path, answer_file_name, answer_fle_path):
     url = 'https://localhost:5000'
     print(url + '/api/upload_python')
 
     # Read file contents
-    questioncontent = readtxt(questionfile)
-    answercontent = readtxt(answerfile)
+    questioncontent = readtxt(question_file_path)
+    answercontent = readtxt(answer_fle_path)
     
-    response = sendQuestionAnswer(url, questionfile, questioncontent, answerfile, answercontent)
+    response = sendQuestionAnswer(url, question_file_name, questioncontent, answer_file_name, answercontent)
     return response
 
-#response = sendFile('questiontest2.txt', 'answertest.txt')
+#response = sendFile('./questiontest2.txt', 'questiontest2.txt', './answertest.txt', 'answertest.txt')
 #print(response)
