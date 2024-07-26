@@ -42,30 +42,43 @@ export class FileUploadComponent {
     }
 
     else{
-      this.parseFiles(files);
-      this.confirmDialog('Do you want to send the files?').then(result => {
-        if (result) {
-          this.readQuestion(files[this.questionindex]);
-          this.readFile(files[this.answerIndex]);
-        }
-      });
+      if(this.parseFiles(files)){
+        this.confirmDialog('Do you want to send the files?').then(result => {
+          if (result) {
+            this.readQuestion(files[this.questionindex]);
+            this.readFile(files[this.answerIndex]);
+          }
+        });
+      }
+      else{
+        alert('Please upload a question file that has the word question in it');
+      }
     }
   }
 
-  parseFiles(files: FileList): void{
+  parseFiles(files: FileList): boolean{
     Array.from(files).forEach(file => {
       this.filename.push(file.name);
     });
     if(this.filename[0].includes('question')){
       this.questionindex = 0;
       this.answerIndex = 1
+      this.filename.pop()
+      this.filename.pop()
+      return true
     }
-    else{
+    else if (this.filename[1].includes('question')){
       this.questionindex = 1;
       this.answerIndex = 0
+      this.filename.pop()
+      this.filename.pop()
+      return true
     }
-    this.filename.pop()
-    this.filename.pop()
+    else{
+      this.filename.pop()
+      this.filename.pop()
+      return false
+    }
   }
 
   onQuestionSelected(event: any): void {

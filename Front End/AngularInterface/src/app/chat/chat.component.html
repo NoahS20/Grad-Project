@@ -22,3 +22,10 @@
     </div>
   </div>
 </div>
+
+<!-- Custom Confirmation Dialog -->
+<div class="custom-confirm-dialog" *ngIf="showConfirmDialog">
+  <p>{{ confirmMessage }}</p>
+  <button (click)="handleConfirm(true)">Yes</button>
+  <button (click)="handleConfirm(false)">No</button>
+</div>

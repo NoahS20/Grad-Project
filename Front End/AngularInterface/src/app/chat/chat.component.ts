@@ -24,6 +24,9 @@ export class ChatComponent implements AfterViewChecked{
   private scrollContainer!: ElementRef;
   firstTime = true;
   @ViewChild(FileUploadComponent) fileUploadComponent!: FileUploadComponent;
+  showConfirmDialog = false;
+  confirmMessage = '';
+  confirmResolve!: (result: boolean) => void;
 
 
   constructor(
@@ -47,19 +50,19 @@ export class ChatComponent implements AfterViewChecked{
   }
 
   confirmQuestionText(textarea: HTMLTextAreaElement) : void{
-      if(confirm("Do you want to upload a question first?")) {
+    this.confirmDialog('Send a question first?').then(result => {
+      if (result) {
         this.openQuestionDialog();
-        this.sendMessage(textarea)
-      }
-      else if(confirm("Send answer?")){
         this.sendMessage(textarea);
       }
-  }
-
-  confirmQuestionFile() : void{
-    if(confirm("Do you want to upload a question first?")) {
-      this.openQuestionDialog();
-    }
+      else{
+        this.confirmDialog('Send the answer?').then(result => {
+          if (result) {
+            this.sendMessage(textarea);
+          }
+        });
+      }
+    });
   }
 
   openQuestionDialog() {
@@ -72,6 +75,7 @@ export class ChatComponent implements AfterViewChecked{
   respond(message: any): void {
     // Simulate a bot response
     setTimeout(() => {
+      console.log(message);
       this.messages.push({ text: message, user: false });
       this.scrollToBottom();
     }, 1000);
@@ -80,7 +84,7 @@ export class ChatComponent implements AfterViewChecked{
 
   ngAfterViewChecked() {
     if(this.firstTime == true){
-      this.messages.push({ text: 'Thank you for using this app! You can only send 2 files. Please make sure one of the files has the word question in it.', user: false });
+      this.messages.push({ text: 'Thank you for using this app! For sending files please choose only 1 quesiton file and 1 answer file. Please make sure the question file has the word question in it.', user: false });
       this.firstTime = false;
     }
     this.scrollToBottom();
@@ -112,14 +116,20 @@ export class ChatComponent implements AfterViewChecked{
 
   onEnterKeyPress(event: any, textarea: HTMLTextAreaElement){
     event.preventDefault();
-    if(confirm("Do you want to upload a question first?")) {
-      this.openQuestionDialog();
-      this.sendMessage(textarea)
-    }
-    else if(confirm("Send answer?")){
-      this.sendMessage(textarea);
-    }
-}
+    this.confirmDialog('Send a question first?').then(result => {
+      if (result) {
+        this.openQuestionDialog();
+        this.sendMessage(textarea);
+      }
+      else{
+        this.confirmDialog('Send the answer?').then(result => {
+          if (result) {
+            this.sendMessage(textarea);
+          }
+        });
+      }
+    });
+  }
 
   scrollToBottom(): void {
     if (typeof window !== "undefined") {
@@ -197,5 +207,20 @@ export class ChatComponent implements AfterViewChecked{
       console.error('No file selected');
     }
   }
+
+  confirmDialog(message: string): Promise<boolean> {
+    this.confirmMessage = message;
+    this.showConfirmDialog = true;
+    return new Promise<boolean>((resolve) => {
+      this.confirmResolve = resolve;
+    });
+  }
+
+  handleConfirm(result: boolean): void {
+    this.showConfirmDialog = false;
+    this.confirmResolve(result);
+  }
+
+
 
 }
