@@ -1,0 +1,16 @@
+text,type,typeId,_id,_labelH,_labelV,_valueH,_valueV,_dataTypeH,_dataTypeV,Paddings,Margins,Description,undefined
+User,Swim Lane - Vertical,creately.flowchart.swimlanev,Swimlane,Row,Column,none,none,Text,Text,"0,0,0,0","0,0,0,0",,[object Object]
+Start,Connector,creately.flowchart.connector,,,,,,,,,,,
+open chat interface,Process,creately.flowchart.process,,,,,,,,,,,
+Upload question,Process,creately.flowchart.process,,,,,,,,,,,
+,Decision,creately.flowchart.decision,,,,,,,,,,,
+Upload file,Process,creately.flowchart.process,,,,,,,,,,,
+Send Message,Process,creately.flowchart.process,,,,,,,,,,,
+Question uploaded and processing,Process,creately.flowchart.process,,,,,,,,,,,
+Receives and sends to mode,Process,creately.flowchart.process,,,,,,,,,,,
+Uploaded and sending to model,Process,creately.flowchart.process,,,,,,,,,,,
+Calls and passes question to ChatGPT,Process,creately.flowchart.process,,,,,,,,,,,
+Calls Llama3 for analysis,Process,creately.flowchart.process,,,,,,,,,,,
+gathers Llama3 verdict,Process,creately.flowchart.process,,,,,,,,,,,
+Response returns to chat interface,Process,creately.flowchart.process,,,,,,,,,,,
+End,Connector,creately.flowchart.connector,,,,,,,,,,,

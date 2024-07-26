@@ -1,0 +1,33 @@
+@startuml
+actor User
+
+participant Component
+participant ApiService
+participant HttpClient
+participant FlaskServer
+
+User -> Component: Initiate action
+Component -> ApiService: call postData(data)
+ApiService -> HttpClient: post(this.apiUrl, data, headers)
+HttpClient -> FlaskServer: POST /api/data
+FlaskServer -> HttpClient: return response
+HttpClient -> ApiService: return Observable(response)
+ApiService -> Component: return Observable(response)
+
+User -> Component: Initiate file upload
+Component -> ApiService: call upload_file(fileName, fileContent)
+ApiService -> HttpClient: post(this.fileUrl, data, headers)
+HttpClient -> FlaskServer: POST /api/upload
+FlaskServer -> HttpClient: return response
+HttpClient -> ApiService: return Observable(response)
+ApiService -> Component: return Observable(response)
+
+User -> Component: Initiate question upload
+Component -> ApiService: call upload_question(fileName, fileContent)
+ApiService -> HttpClient: post(this.questionUrl, data, headers)
+HttpClient -> FlaskServer: POST /api/question
+FlaskServer -> HttpClient: return response
+HttpClient -> ApiService: return Observable(response)
+ApiService -> Component: return Observable(response)
+
+@enduml

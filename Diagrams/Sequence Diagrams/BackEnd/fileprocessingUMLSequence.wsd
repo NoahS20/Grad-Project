@@ -1,0 +1,40 @@
+@startuml
+actor User
+participant readFile
+participant saveFile
+participant checkIfDone
+participant readtxt
+participant readdoc
+participant readpdf
+
+User -> readFile: provide filecontent, filepath, filename
+readFile -> saveFile: call saveFile(filecontent, filepath, filename)
+saveFile -> saveFile: decode and save file
+saveFile -> readFile: return "success"
+alt file extension is .txt
+    readFile -> readtxt: call readtxt(filepath)
+else file extension is .doc or .docx
+    readFile -> readdoc: call readdoc(filepath)
+else file extension is .pdf
+    readFile -> readpdf: call readpdf(filepath)
+else invalid filetype
+    readFile -> User: return "Invalid filetype"
+end
+group read file content
+    readtxt -> checkIfDone: check if file exists
+    checkIfDone -> readtxt: file exists
+    readtxt -> readtxt: read file content
+    readtxt -> readFile: return file content
+
+    readdoc -> checkIfDone: check if file exists
+    checkIfDone -> readdoc: file exists
+    readdoc -> readdoc: read file content
+    readdoc -> readFile: return file content
+
+    readpdf -> checkIfDone: check if file exists
+    checkIfDone -> readpdf: file exists
+    readpdf -> readpdf: read file content
+    readpdf -> readFile: return file content
+end
+readFile -> User: return file content
+@enduml

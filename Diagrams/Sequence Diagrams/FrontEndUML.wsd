@@ -1,0 +1,75 @@
+@startuml
+actor User
+
+participant AppModule
+participant AppComponent
+participant FileUploadComponent
+participant ChatComponent
+participant fileTransferring
+participant ApiService
+participant HttpClient
+
+' Bootstrap process
+User -> AppModule: Load Application
+AppModule -> BrowserModule: Import BrowserModule
+AppModule -> RouterModule: Import RouterModule
+AppModule -> FormsModule: Import FormsModule
+AppModule -> HttpClientModule: Import HttpClientModule
+AppModule -> AppComponent: Bootstrap AppComponent
+
+' File Upload process
+User -> FileUploadComponent: Select file (onFileSelected)
+FileUploadComponent -> FileUploadComponent: readFile(file)
+FileUploadComponent -> fileTransferring: fileTransfer(file)
+fileTransferring -> dataSource: next(file)
+
+' Question Upload process
+User -> FileUploadComponent: Select question file (onQuestionSelected)
+FileUploadComponent -> FileUploadComponent: readQuestion(file)
+FileUploadComponent -> fileTransferring: questionTransfer(file)
+fileTransferring -> questionSource: next(file)
+
+' Message handling process in ChatComponent
+User -> ChatComponent: Send message (sendMessage)
+ChatComponent -> ChatComponent: loading = true
+ChatComponent -> ChatComponent: scrollToBottom()
+ChatComponent -> ChatComponent: messages.push({ text: inputMessage, user: true })
+ChatComponent -> ChatComponent: sendData(inputMessage)
+ChatComponent -> ApiService: postData(inputMessage)
+ApiService -> HttpClient: POST /api/data
+HttpClient -> ApiService: return response
+ApiService -> ChatComponent: return response
+ChatComponent -> ChatComponent: respond(response.Verdict)
+ChatComponent -> ChatComponent: messages.push({ text: response.Verdict, user: false })
+ChatComponent -> ChatComponent: scrollToBottom()
+ChatComponent -> ChatComponent: loading = false
+
+' Handling received file data in ChatComponent
+fileTransferring -> Subscription: currentData.subscribe(data)
+Subscription -> ChatComponent: return data
+ChatComponent -> ChatComponent: respondFile(data)
+ChatComponent -> ChatComponent: sendFile(data)
+ChatComponent -> FileReader: readAsDataURL(file)
+FileReader -> ChatComponent: return base64
+ChatComponent -> ApiService: upload_file(file.name, base64Content)
+ApiService -> HttpClient: POST /api/upload
+HttpClient -> ApiService: return response
+ApiService -> ChatComponent: return response
+ChatComponent -> ChatComponent: respond(response.Verdict)
+ChatComponent -> ChatComponent: messages.push({ text: response.Verdict, user: false })
+
+' Handling received question data in ChatComponent
+fileTransferring -> Subscription: question.subscribe(data)
+Subscription -> ChatComponent: return data
+ChatComponent -> ChatComponent: respondQuestion(data)
+ChatComponent -> ChatComponent: sendQuestion(data)
+ChatComponent -> FileReader: readAsDataURL(file)
+FileReader -> ChatComponent: return base64
+ChatComponent -> ApiService: upload_question(file.name, base64Content)
+ApiService -> HttpClient: POST /api/question
+HttpClient -> ApiService: return response
+ApiService -> ChatComponent: return response
+ChatComponent -> ChatComponent: respond(response.Result)
+ChatComponent -> ChatComponent: messages.push({ text: response.Result, user: false })
+
+@enduml

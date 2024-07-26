@@ -1,0 +1,9 @@
+@startuml
+actor User
+participant process_question
+
+User -> process_question: provide question
+process_question -> process_question: question.lower()
+process_question -> process_question: question.replace("?", "")
+process_question -> User: return processed question
+@enduml

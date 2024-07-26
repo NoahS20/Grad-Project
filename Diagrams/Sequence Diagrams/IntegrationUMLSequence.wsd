@@ -1,0 +1,35 @@
+@startuml
+actor User
+
+participant sendFile
+participant readtxt
+participant sendQuestionAnswer
+participant requests
+
+User -> sendFile: call sendFile(question_file_name, question_file_path, answer_file_name, answer_file_path)
+sendFile -> readtxt: readtxt(question_file_path)
+readtxt -> readtxt: read file content
+readtxt -> sendFile: return question content
+
+sendFile -> readtxt: readtxt(answer_file_path)
+readtxt -> readtxt: read file content
+readtxt -> sendFile: return answer content
+
+sendFile -> sendQuestionAnswer: sendQuestionAnswer(url, question_file_name, question_content, answer_file_name, answer_content)
+sendQuestionAnswer -> base64: encode question_content
+sendQuestionAnswer -> base64: encode answer_content
+sendQuestionAnswer -> sendQuestionAnswer: prepare data
+sendQuestionAnswer -> requests: requests.post(url + '/api/upload_python', data, headers, verify)
+requests -> requests: send HTTP POST request
+requests -> sendQuestionAnswer: return response
+
+alt response is successful
+    sendQuestionAnswer -> sendQuestionAnswer: response.json()
+    sendQuestionAnswer -> sendFile: return verdict
+else response has an error
+    sendQuestionAnswer -> sendQuestionAnswer: handle exception
+    sendQuestionAnswer -> sendFile: return error message
+end
+
+sendFile -> User: return response
+@enduml

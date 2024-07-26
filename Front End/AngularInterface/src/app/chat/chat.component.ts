@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { ApiService } from '../api.service';
+import { FileUploadComponent } from '../file-upload/file-upload.component';
 
 @Component({
   selector: 'app-chat',
@@ -22,6 +23,8 @@ export class ChatComponent implements AfterViewChecked{
   @ViewChild('scrollContainer')
   private scrollContainer!: ElementRef;
   firstTime = true;
+  @ViewChild(FileUploadComponent) fileUploadComponent!: FileUploadComponent;
+
 
   constructor(
     private dataService: fileTransferring,
@@ -43,6 +46,29 @@ export class ChatComponent implements AfterViewChecked{
     }
   }
 
+  confirmQuestionText(textarea: HTMLTextAreaElement) : void{
+      if(confirm("Do you want to upload a question first?")) {
+        this.openQuestionDialog();
+        this.sendMessage(textarea)
+      }
+      else if(confirm("Send answer?")){
+        this.sendMessage(textarea);
+      }
+  }
+
+  confirmQuestionFile() : void{
+    if(confirm("Do you want to upload a question first?")) {
+      this.openQuestionDialog();
+    }
+  }
+
+  openQuestionDialog() {
+    var questionInput = document.getElementById("questionInput");
+    if (questionInput) {
+      questionInput.click();
+    }
+  }
+
   respond(message: any): void {
     // Simulate a bot response
     setTimeout(() => {
@@ -54,7 +80,7 @@ export class ChatComponent implements AfterViewChecked{
 
   ngAfterViewChecked() {
     if(this.firstTime == true){
-      this.messages.push({ text: 'Thank you for using this app! Before inputting the response to be checked make sure the question that you want the answer checked for is loaded by clicking the green Q button', user: false });
+      this.messages.push({ text: 'Thank you for using this app! You can only send 2 files. Please make sure one of the files has the word question in it.', user: false });
       this.firstTime = false;
     }
     this.scrollToBottom();
@@ -86,7 +112,13 @@ export class ChatComponent implements AfterViewChecked{
 
   onEnterKeyPress(event: any, textarea: HTMLTextAreaElement){
     event.preventDefault();
-    this.sendMessage(textarea);
+    if(confirm("Do you want to upload a question first?")) {
+      this.openQuestionDialog();
+      this.sendMessage(textarea)
+    }
+    else if(confirm("Send answer?")){
+      this.sendMessage(textarea);
+    }
 }
 
   scrollToBottom(): void {

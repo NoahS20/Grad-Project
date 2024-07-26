@@ -1,8 +1,8 @@
 <!-- file-upload.component.html -->
 <div class="button-container">
   <!-- Button to trigger file input -->
-  <button class="file-upload-button" (click)="fileInput.click()" aria-label="Upload file"> 📁 <!-- Unicode folder icon --></button>
-  <input type="file" #fileInput hidden (change)="onFileSelected($event)">
+  <button class="file-upload-button" (click)="fileInput.click()" aria-label="Upload file"> Upload Answers here! <!-- Unicode folder icon --></button>
+  <input type="file" #fileInput multiple hidden (change)="onFilesSelected($event)">
   <!-- Optional: Display file contents or file name below -->
   <div *ngIf="fileContent" class="file-content">
     <h4>File Contents:</h4>
@@ -12,14 +12,21 @@
 
 <div class="question-container">
   <!-- Button to trigger question input -->
-  <button class="Question-upload-button" (click)="questionInput.click()" aria-label="Upload Question"> Q <!-- Unicode folder icon --></button>
-  <input type="file" #questionInput hidden (change)="onQuestionSelected($event)">
+  <button class="question-upload-button"  id = 'questionButton' (click)="questionInput.click()" aria-label="Upload Question"> Upload Questions here! <!-- Unicode folder icon --></button>
+  <input type="file" id = 'questionInput' #questionInput hidden (change)="onQuestionSelected($event)">
 
   <!-- Optional: Display file contents or file name below -->
   <div *ngIf="questionContent" class="file-content">
     <h4>Question Contents:</h4>
     <pre>{{ questionContent }}</pre>
   </div>
+</div>
+
+<!-- Custom Confirmation Dialog -->
+<div class="custom-confirm-dialog" *ngIf="showConfirmDialog">
+  <p>{{ confirmMessage }}</p>
+  <button (click)="handleConfirm(true)">Yes</button>
+  <button (click)="handleConfirm(false)">No</button>
 </div>
 
 

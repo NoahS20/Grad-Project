@@ -19,6 +19,7 @@ def before_request():
     if not request.is_secure:
         return redirect(request.url.replace("http://", "https://", 1))
 
+
 @app.route('/api/data', methods=['POST'])
 def post_data():
     if request.is_json:
@@ -93,3 +94,4 @@ if __name__ == '__main__':
     context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
     context.load_cert_chain(certfile='ssl/server.crt', keyfile='ssl/server.key')
     app.run(debug=True, host='0.0.0.0', port=5000, ssl_context=context)
+    #app.run(debug=True, host='0.0.0.0', port=5000)

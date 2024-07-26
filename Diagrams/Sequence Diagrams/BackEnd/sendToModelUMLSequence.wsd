@@ -1,0 +1,13 @@
+@startuml
+actor User
+participant send_to_model
+participant process_question
+participant get_ai_response
+
+User -> send_to_model: provide question
+send_to_model -> process_question: call process_question(question)
+process_question -> send_to_model: return processed question
+send_to_model -> get_ai_response: call get_ai_response(processed question)
+get_ai_response -> send_to_model: return response
+send_to_model -> User: return response
+@enduml

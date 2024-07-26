@@ -13,7 +13,7 @@ def sendQuestionAnswer(url, question_name, question_content, answer_name, answer
         'question_name': question_name,
         'question_content': encoded_question_content,
         'answer_name': answer_name,
-        'answer_content': encoded_answer_content,
+        'answer_content': encoded_answer_content
     }
     
     print("Request to /api/upload_python")
@@ -21,8 +21,8 @@ def sendQuestionAnswer(url, question_name, question_content, answer_name, answer
         response = requests.post(
             url=url + '/api/upload_python',
             data=json.dumps(data),
-            headers=headers,
-            verify='ssl/server.pem'
+            headers=headers
+            #verify='ssl/server.pem'
         )
         response.raise_for_status()  # Raise an exception for HTTP errors
         response_json = response.json()
@@ -43,7 +43,7 @@ def readtxt(file_path):
         return f"Error: An error occurred while reading the file at {file_path}."
 
 def sendFile(question_file_name, question_file_path, answer_file_name, answer_fle_path):
-    url = 'https://localhost:5000'
+    url = 'http://localhost:5000'
     print(url + '/api/upload_python')
 
     # Read file contents
@@ -53,5 +53,7 @@ def sendFile(question_file_name, question_file_path, answer_file_name, answer_fl
     response = sendQuestionAnswer(url, question_file_name, questioncontent, answer_file_name, answercontent)
     return response
 
-#response = sendFile('./questiontest2.txt', 'questiontest2.txt', './answertest.txt', 'answertest.txt')
-#print(response)
+response = sendFile('./questiontest2.txt', 'questiontest2.txt', './answertest.txt', 'answertest.txt')
+print(type(response))
+print(response)
+

@@ -15,7 +15,7 @@
         [(ngModel)]="inputMessage"
         placeholder="Type a message..."
         autofocus rows="1"></textarea>
-      <button class="send-button" [disabled]="loading" (click)="sendMessage(textarea)">
+      <button class="send-button" [disabled]="loading" (click)="confirmQuestionText(textarea)">
         <span *ngIf="!loading">↑</span>
         <span *ngIf="loading" class="spinner"></span>
       </button>

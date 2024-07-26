@@ -17,14 +17,14 @@
 
 }
 
-.Question-upload-button {
+.question-upload-button {
   background-color: #090909; /* Light gray background */
   color: #78be91; /* Darker text color for contrast */
   border: none; /* No border */
   border-radius: 50%; /* Make it round */
   width: 40px; /* Fixed width */
   height: 40px; /* Fixed height to maintain the circle shape */
-  display: flex;
+  display: none;
   right: 100px;
   justify-content: center; /* Center the icon horizontally */
   align-items: center; /* Center the icon vertically */
@@ -37,13 +37,29 @@
 
 }
 
+.custom-confirm-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  text-align: center;
+}
+
+.custom-confirm-dialog button {
+  margin: 8px;
+}
 
 
 .file-upload-button:hover {
   background-color: #686767; /* Slightly darker shade on hover */
 }
 
-.Question-upload-button:hover {
+.question-upload-button:hover {
   background-color: #c2cdc6; /* Slightly darker shade on hover */
 }
 

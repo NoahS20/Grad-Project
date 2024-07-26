@@ -1,0 +1,17 @@
+@startuml
+actor User
+
+participant FileUploadComponent
+participant fileTransferring
+
+User -> FileUploadComponent: Select file (onFileSelected)
+FileUploadComponent -> FileUploadComponent: readFile(file)
+FileUploadComponent -> fileTransferring: fileTransfer(file)
+fileTransferring -> dataSource: next(file)
+
+User -> FileUploadComponent: Select question file (onQuestionSelected)
+FileUploadComponent -> FileUploadComponent: readQuestion(file)
+FileUploadComponent -> fileTransferring: questionTransfer(file)
+fileTransferring -> questionSource: next(file)
+
+@enduml

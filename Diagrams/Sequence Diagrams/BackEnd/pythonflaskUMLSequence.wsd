@@ -1,0 +1,88 @@
+@startuml
+actor User
+
+participant FlaskApp
+participant fileprocessing
+participant questionprocessing
+participant sendToModel
+
+User -> FlaskApp: POST /api/data
+alt request.is_json
+    FlaskApp -> FlaskApp: get_json()
+    FlaskApp -> sendToModel: sendTypedResponse_and_ChatGPTResponse(data)
+    sendToModel -> sendToModel: process data
+    sendToModel -> FlaskApp: return data
+    FlaskApp -> User: return {"Verdict": data}
+else request.is_not_json
+    FlaskApp -> User: return {"error": "Invalid content type, must be application/json"}, 400
+end
+
+User -> FlaskApp: POST /api/upload
+alt request.is_json
+    FlaskApp -> FlaskApp: get_json()
+    FlaskApp -> FlaskApp: app.logger.debug(f"Request data: {data}")
+    FlaskApp -> FlaskApp: check file_name and file_content
+    alt missing fileName or fileContent
+        FlaskApp -> User: return {"error": "Invalid request, missing fileName or fileContent"}, 400
+    else valid fileName and fileContent
+        FlaskApp -> fileprocessing: readFile(file_content, file_path, file_name)
+        fileprocessing -> fileprocessing: process file
+        fileprocessing -> FlaskApp: return content
+        FlaskApp -> sendToModel: sendFile_and_ChatGPTResponse(content)
+        sendToModel -> sendToModel: process content
+        sendToModel -> FlaskApp: return verdict
+        FlaskApp -> FlaskApp: os.remove(file_path)
+        FlaskApp -> User: return {"Verdict": verdict}
+    end
+else request.is_not_json
+    FlaskApp -> User: return {"error": "Invalid content type, must be application/json"}, 400
+end
+
+User -> FlaskApp: POST /api/question
+alt request.is_json
+    FlaskApp -> FlaskApp: get_json()
+    FlaskApp -> FlaskApp: app.logger.debug(f"Request data: {data}")
+    FlaskApp -> FlaskApp: check file_name and file_content
+    alt missing fileName or fileContent
+        FlaskApp -> User: return {"error": "Invalid request, missing fileName or fileContent"}, 400
+    else valid fileName and fileContent
+        FlaskApp -> questionprocessing: readFile(file_content, file_path, file_name)
+        questionprocessing -> questionprocessing: process file
+        questionprocessing -> FlaskApp: return result
+        FlaskApp -> FlaskApp: os.remove(file_path)
+        FlaskApp -> User: return {"Result": result}
+    end
+else request.is_not_json
+    FlaskApp -> User: return {"error": "Invalid content type, must be application/json"}, 400
+end
+
+User -> FlaskApp: POST /api/upload_python
+alt request.is_json
+    FlaskApp -> FlaskApp: get_json()
+    FlaskApp -> FlaskApp: check question_name and question_content
+    alt missing question_name or question_content
+        FlaskApp -> User: return {"error": "Invalid request, missing fileName or fileContent"}, 400
+    else valid question_name and question_content
+        FlaskApp -> questionprocessing: readFile(file_content, file_path, file_name)
+        questionprocessing -> questionprocessing: process file
+        questionprocessing -> FlaskApp: return result
+        FlaskApp -> FlaskApp: os.remove(file_path)
+        
+        FlaskApp -> FlaskApp: check answer_name and answer_content
+        alt missing answer_name or answer_content
+            FlaskApp -> User: return {"error": "Invalid request, missing fileName or fileContent"}, 400
+        else valid answer_name and answer_content
+            FlaskApp -> fileprocessing: readFile(file_content, file_path, file_name)
+            fileprocessing -> fileprocessing: process file
+            fileprocessing -> FlaskApp: return content
+            FlaskApp -> sendToModel: sendFile_and_ChatGPTResponse(content)
+            sendToModel -> sendToModel: process content
+            sendToModel -> FlaskApp: return verdict
+            FlaskApp -> FlaskApp: os.remove(file_path)
+            FlaskApp -> User: return {"Verdict": verdict}
+        end
+    end
+else request.is_not_json
+    FlaskApp -> User: return {"error": "Invalid content type, must be application/json"}, 400
+end
+@enduml

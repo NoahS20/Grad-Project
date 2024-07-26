@@ -1,0 +1,46 @@
+@startuml
+actor Developer
+
+participant NgModule
+participant BrowserModule
+participant FormsModule
+participant RouterModule
+participant HttpClientModule
+participant AppComponent
+participant ChatComponent
+participant FileUploadComponent
+participant AutoResizeDirective
+participant ApiService
+participant platformBrowserDynamic
+
+Developer -> NgModule: Define @NgModule
+
+NgModule -> BrowserModule: Import BrowserModule
+NgModule -> RouterModule: Import RouterModule
+NgModule -> FormsModule: Import FormsModule
+NgModule -> HttpClientModule: Import HttpClientModule
+
+NgModule -> AppComponent: Declare AppComponent
+NgModule -> ChatComponent: Declare ChatComponent
+NgModule -> FileUploadComponent: Declare FileUploadComponent
+NgModule -> AutoResizeDirective: Declare AutoResizeDirective
+
+NgModule -> ApiService: Provide ApiService
+
+NgModule -> AppComponent: Bootstrap AppComponent
+
+Developer -> platformBrowserDynamic: platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic -> NgModule: Initialize AppModule
+NgModule -> BrowserModule: Initialize BrowserModule
+NgModule -> RouterModule: Initialize RouterModule
+NgModule -> FormsModule: Initialize FormsModule
+NgModule -> HttpClientModule: Initialize HttpClientModule
+NgModule -> AppComponent: Initialize AppComponent
+NgModule -> ChatComponent: Initialize ChatComponent
+NgModule -> FileUploadComponent: Initialize FileUploadComponent
+NgModule -> AutoResizeDirective: Initialize AutoResizeDirective
+NgModule -> ApiService: Initialize ApiService
+
+platformBrowserDynamic -> Developer: Application Ready
+
+@enduml

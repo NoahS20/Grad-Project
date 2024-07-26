@@ -1,0 +1,14 @@
+@startuml
+actor User
+participant replicate_llama_api_call
+participant requests
+
+User -> replicate_llama_api_call: provide payload
+replicate_llama_api_call -> requests: POST /endpoint (payload, headers)
+requests -> replicate_llama_api_call: return response
+alt exception
+    replicate_llama_api_call -> User: return {"error": str(e)}
+else no exception
+    replicate_llama_api_call -> User: return response.json()
+end
+@enduml

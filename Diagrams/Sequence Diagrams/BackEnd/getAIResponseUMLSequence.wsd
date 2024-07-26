@@ -1,0 +1,10 @@
+@startuml
+actor User
+participant get_ai_response
+participant openai.Completion
+
+User -> get_ai_response: provide prompt, model
+get_ai_response -> openai.Completion: create(engine=model, prompt=prompt, max_tokens=150)
+openai.Completion -> get_ai_response: return response
+get_ai_response -> User: return response.choices[0].text.strip()
+@enduml
