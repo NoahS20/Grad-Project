@@ -40,7 +40,9 @@ def saveFile(file_content, file_path, file_name):
                 checkIfDOne(file_path)
                 file.write(file_content)
                 saveQuestion(file_path, file_content)
-                return "Question file: " + file_name + " upload success"
+                file_content = str(file_content)
+                file_content = file_content[1:]
+                return "Uploaded question file " + file_name + ": " + file_content
         except Exception as e:
             return ({"message": str(e)}, e)
         

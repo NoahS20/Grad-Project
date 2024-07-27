@@ -1,12 +1,16 @@
 <!-- file-upload.component.html -->
 <div class="button-container">
   <!-- Button to trigger file input -->
-  <button class="file-upload-button" (click)="fileInput.click()" aria-label="Upload file"> Upload questions and answers here! <!-- Unicode folder icon --></button>
-  <input type="file" #fileInput multiple hidden (change)="onFilesSelected($event)">
+  <button class="file-upload-button" (click)="fileInput.click()" aria-label="Upload file">
+    <i class="fas fa-paperclip"></i><!-- Unicode folder icon -->
+  </button>
+  <input type="file" #fileInput hidden (change)="onFilesSelected($event)" multiple>
   <!-- Optional: Display file contents or file name below -->
-  <div *ngIf="fileContent" class="file-content">
-    <h4>File Contents:</h4>
-    <pre>{{ fileContent }}</pre>
+  <div *ngIf="fileNames.length > 0" class="file-names">
+    <h4>Selected Files:</h4>
+    <ul>
+      <li *ngFor="let fileName of fileNames">{{ fileName }}</li>
+    </ul>
   </div>
 </div>
 

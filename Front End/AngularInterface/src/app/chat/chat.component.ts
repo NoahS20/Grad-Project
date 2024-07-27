@@ -27,7 +27,7 @@ export class ChatComponent implements AfterViewChecked{
   showConfirmDialog = false;
   confirmMessage = '';
   confirmResolve!: (result: boolean) => void;
-
+  question_uploaded = false
 
   constructor(
     private dataService: fileTransferring,
@@ -50,18 +50,12 @@ export class ChatComponent implements AfterViewChecked{
   }
 
   confirmQuestionText(textarea: HTMLTextAreaElement) : void{
-    this.confirmDialog('Send a question first?').then(result => {
-      if (result) {
-        this.openQuestionDialog();
-        this.sendMessage(textarea);
-      }
-      else{
-        this.confirmDialog('Send the answer?').then(result => {
-          if (result) {
-            this.sendMessage(textarea);
-          }
-        });
-      }
+      this.confirmDialog('Would like to send this answer and select a question file for this answer?').then(result => {
+        if (result) {
+          alert('Upload a question')
+          this.openQuestionDialog();
+          this.sendMessage(textarea);
+        }
     });
   }
 
@@ -70,6 +64,7 @@ export class ChatComponent implements AfterViewChecked{
     if (questionInput) {
       questionInput.click();
     }
+    this.question_uploaded = true;
   }
 
   respond(message: any): void {
@@ -84,10 +79,9 @@ export class ChatComponent implements AfterViewChecked{
 
   ngAfterViewChecked() {
     if(this.firstTime == true){
-      this.messages.push({ text: 'Thank you for using this app! For sending files please choose only 1 quesiton file and 1 answer file. Please make sure the question file has the word question in it.', user: false });
+      this.messages.push({ text: 'Please read! You can upload a question and answer by clicking the paperclip button or you can type the answer first and then choose a question!', user: false });
       this.firstTime = false;
     }
-    this.scrollToBottom();
   }
 
   ngOnInit() {
@@ -116,17 +110,11 @@ export class ChatComponent implements AfterViewChecked{
 
   onEnterKeyPress(event: any, textarea: HTMLTextAreaElement){
     event.preventDefault();
-    this.confirmDialog('Send a question first?').then(result => {
+    this.confirmDialog('Would like to send this answer and select question for this answer?').then(result => {
       if (result) {
+        alert('Upload a question')
         this.openQuestionDialog();
         this.sendMessage(textarea);
-      }
-      else{
-        this.confirmDialog('Send the answer?').then(result => {
-          if (result) {
-            this.sendMessage(textarea);
-          }
-        });
       }
     });
   }
@@ -148,11 +136,13 @@ export class ChatComponent implements AfterViewChecked{
 
   respondFile(file: File): void {
     console.log("success");
+    console.log(file)
     this.sendFile(file);
   }
 
   respondQuestion(file: File): void {
     console.log("recieved question");
+    console.log(file)
     this.sendQuestion(file)
   }
 

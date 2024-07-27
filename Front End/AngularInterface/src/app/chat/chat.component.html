@@ -13,7 +13,7 @@
         (input)="scrollToBottom()"
         (keydown.enter)= 'onEnterKeyPress($event,textarea)'
         [(ngModel)]="inputMessage"
-        placeholder="Type a message..."
+        placeholder="Type an answer and then upload a question here!"
         autofocus rows="1"></textarea>
       <button class="send-button" [disabled]="loading" (click)="confirmQuestionText(textarea)">
         <span *ngIf="!loading">↑</span>

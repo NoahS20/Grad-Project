@@ -114,10 +114,8 @@
   background: linear-gradient(135deg,#f49e5c,#4d9ac7) border-box;
   color: #0a0a0a;
   font-family: "Times New Roman";
-  font-size: 17px;
+  font-size: 14px;
   white-space: pre-line; /* Preserves whitespace and new lines */
-
-
   /* place-self: end; */
 }
 
@@ -156,7 +154,7 @@
   justify-content: center; /* Centers the text horizontally within the bubble */
   align-self: flex-start;
   font-family: "Times New Roman";
-  font-size: 17px;
+  font-size: 16px;
 
 }
 
@@ -200,4 +198,5 @@ button:disabled {
   -ms-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+  width: 200px;
 }

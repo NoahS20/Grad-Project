@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { fileTransferring } from '../file-transfer.service';
 
 interface FileContent {
@@ -11,21 +11,26 @@ interface FileContent {
   styleUrls: ['./file-upload.component.css']
 })
 
-export class FileUploadComponent {
+export class FileUploadComponent{
   constructor(private fileT: fileTransferring) {}
   fileContent: string | ArrayBuffer | null = null;
   questionContent: string | ArrayBuffer | null = null;
   @ViewChild('questionInput', { static: false }) questionInput!: ElementRef;
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
   maxFiles = 2;
   fileContents: FileContent[] = [];
   verdict = false
   showConfirmDialog = false;
   confirmMessage = '';
   confirmResolve!: (result: boolean) => void;
-  filename: string[] = []
-  questionindex = 0;
-  answerIndex = 0;
+  fileNames: string[] = []
+  questionFileNames: string[] = []
+  questionFiles: File[] = [];
+  answerFiles: File[] = []
 
+  onFileChange() {
+    this.fileInput.nativeElement.value = '';
+  }
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[1];
@@ -35,49 +40,57 @@ export class FileUploadComponent {
   }
 
   onFilesSelected(event: any): void {
-    const files: FileList = event.target.files;
+    const files: any = event.target.files;
+    console.log(files)
     const totalFiles = this.fileContents.length + files.length;
     if (totalFiles > this.maxFiles) {
       alert(`You can only upload a maximum of ${this.maxFiles} files.`);
     }
 
     else{
+      alert('Please upload a question file that has the word question in it');
       if(this.parseFiles(files)){
-        this.confirmDialog('Do you want to send the files?').then(result => {
+        this.confirmDialog('Do you want to send the chosen files?').then(result => {
           if (result) {
-            this.readQuestion(files[this.questionindex]);
-            this.readFile(files[this.answerIndex]);
+            this.readQuestion(this.questionFiles[0]);
+            this.readFile(this.answerFiles[0]);
           }
+          this.questionFileNames.pop();
+          this.fileNames.pop();
+          this.answerFiles.pop();
+          this.questionFiles.pop();
         });
       }
       else{
-        alert('Please upload a question file that has the word question in it');
+        alert('Error: None of the files ahd the word question in it. Please upload a question file that has the word question in it');
       }
     }
+    this.onFileChange()
   }
 
   parseFiles(files: FileList): boolean{
+    console.log(files)
     Array.from(files).forEach(file => {
-      this.filename.push(file.name);
+      console.log(file.name)
+      if (file.name.toLowerCase().includes('question')) {
+        this.questionFileNames.push(file.name);
+        this.questionFiles.push(file)
+      } else {
+        this.fileNames.push(file.name);
+        this.answerFiles.push(file)
+      }
     });
-    if(this.filename[0].includes('question')){
-      this.questionindex = 0;
-      this.answerIndex = 1
-      this.filename.pop()
-      this.filename.pop()
-      return true
-    }
-    else if (this.filename[1].includes('question')){
-      this.questionindex = 1;
-      this.answerIndex = 0
-      this.filename.pop()
-      this.filename.pop()
-      return true
+    if(this.questionFileNames === undefined || this.questionFileNames.length == 0 || this.fileNames === undefined || this.fileNames.length == 0 ){
+      console.log(this.questionFileNames)
+      console.log(this.fileNames);
+      this.questionFileNames.pop();
+      this.fileNames.pop();
+      this.answerFiles.pop();
+      this.questionFiles.pop();
+      return false
     }
     else{
-      this.filename.pop()
-      this.filename.pop()
-      return false
+      return true
     }
   }
 
@@ -86,6 +99,7 @@ export class FileUploadComponent {
     if (file) {
       this.readQuestion(file);
     }
+    this.onFileChange()
   }
 
   private readFile(file: File): void {
