@@ -32,11 +32,19 @@ export class FileUploadComponent{
     this.fileInput.nativeElement.value = '';
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[1];
-    if (file) {
-      this.readFile(file);
+  triggerFileInput(event: Event) {
+    alert('Please upload a question file that has the word question in its name and a answer file with any name.');
+    if (this.fileInput) {
+      this.fileInput.nativeElement.click();
     }
+  }
+
+  onQuestionSelected(event: any): void {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.readQuestion(file);
+    }
+    this.onFileChange()
   }
 
   onFilesSelected(event: any): void {
@@ -48,9 +56,8 @@ export class FileUploadComponent{
     }
 
     else{
-      alert('Please upload a question file that has the word question in it');
       if(this.parseFiles(files)){
-        this.confirmDialog('Do you want to send the chosen files?').then(result => {
+        this.confirmDialog('Do you want to send the chosen files: ' + this.questionFileNames[0] + " " + this.fileNames[0]).then(result => {
           if (result) {
             this.readQuestion(this.questionFiles[0]);
             this.readFile(this.answerFiles[0]);
@@ -94,14 +101,6 @@ export class FileUploadComponent{
     }
   }
 
-  onQuestionSelected(event: any): void {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.readQuestion(file);
-    }
-    this.onFileChange()
-  }
-
   private readFile(file: File): void {
     this.fileT.fileTransfer(file);
     // Adjust this method based on the file type, e.g., readAsDataURL for images
@@ -112,13 +111,6 @@ export class FileUploadComponent{
     // Adjust this method based on the file type, e.g., readAsDataURL for images
   }
 
-  confirmQuestionFile() : void{
-    this.confirmDialog('Do you want to upload a question file?').then(result => {
-      if (result) {
-        this.openQuestionDialog();
-      }
-    });
-  }
 
   openQuestionDialog() {
     this.questionInput.nativeElement.click();

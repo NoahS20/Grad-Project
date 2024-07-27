@@ -50,14 +50,40 @@ export class ChatComponent implements AfterViewChecked{
   }
 
   confirmQuestionText(textarea: HTMLTextAreaElement) : void{
+    if(this.checkEmpty(textarea)){
       this.confirmDialog('Would like to send this answer and select a question file for this answer?').then(result => {
+          if (result) {
+            alert('Upload a question file with the word question in it')
+            console.log(textarea)
+            this.openQuestionDialog();
+            this.sendMessage(textarea);
+          }
+      });
+    }
+  }
+
+  onEnterKeyPress(event: any, textarea: HTMLTextAreaElement){
+    event.preventDefault();
+    if(this.checkEmpty(textarea)){
+      this.confirmDialog('Would like to send this answer and select question for this answer?').then(result => {
         if (result) {
-          alert('Upload a question')
+          alert('Upload a question file that has the word question in the name')
           this.openQuestionDialog();
           this.sendMessage(textarea);
         }
-    });
+      });
+    }
   }
+
+  checkEmpty(textarea: HTMLTextAreaElement){
+    if((<HTMLInputElement>document.getElementById('type_area'))!.value == ''){
+          alert ("No answer text. Please enter an answer before submitting.");
+          return false;
+      }
+      else{
+          return true;
+      }
+    }
 
   openQuestionDialog() {
     var questionInput = document.getElementById("questionInput");
@@ -79,7 +105,7 @@ export class ChatComponent implements AfterViewChecked{
 
   ngAfterViewChecked() {
     if(this.firstTime == true){
-      this.messages.push({ text: 'Please read! You can upload a question and answer by clicking the paperclip button or you can type the answer first and then choose a question!', user: false });
+      this.messages.push({ text: 'Please read! You can upload a question and answer by clicking the purple paperclip button or you can type the answer first and then choose a question!', user: false });
       this.firstTime = false;
     }
   }
@@ -106,17 +132,6 @@ export class ChatComponent implements AfterViewChecked{
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-  }
-
-  onEnterKeyPress(event: any, textarea: HTMLTextAreaElement){
-    event.preventDefault();
-    this.confirmDialog('Would like to send this answer and select question for this answer?').then(result => {
-      if (result) {
-        alert('Upload a question')
-        this.openQuestionDialog();
-        this.sendMessage(textarea);
-      }
-    });
   }
 
   scrollToBottom(): void {

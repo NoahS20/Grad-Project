@@ -26,8 +26,10 @@ def post_data():
         data = request.get_json()
         data = sendToModel.sendTypedResponse_and_ChatGPTResponse(data)
         response = {"Verdict": data}
+        questionprocessing.eraseQuestion()
         return jsonify(response)
     else:
+        questionprocessing.eraseQuestion()
         return jsonify({"error": "Invalid content type, must be application/json"}), 400
 
 @app.route('/api/upload', methods=['POST'])
@@ -44,8 +46,10 @@ def upload_file():
         content = fileprocessing.readFile(file_content, file_path, file_name)
         verdict = sendToModel.sendFile_and_ChatGPTResponse(content)
         os.remove(file_path)
+        questionprocessing.eraseQuestion()
         return jsonify({"Verdict": verdict})
     else:
+        questionprocessing.eraseQuestion()
         return jsonify({"error": "Invalid content type, must be application/json"}), 400
 
 @app.route('/api/question', methods=['POST'])
@@ -56,7 +60,7 @@ def upload_question():
         file_name = data.get('fileName')
         file_content = data.get('fileContent')  
         if not file_name or not file_content:
-            return jsonify({"error": "Invalid request, missing fileName or fileContent"}), 400
+            return jsonify({"error": "Invalid request, missing question name or file content"}), 400
         file_path = os.path.join('Temp_Save', file_name)
         result = questionprocessing.readFile(file_content, file_path, file_name)
         os.remove(file_path)
@@ -74,7 +78,7 @@ def upload_file_with_python():
         file_content = data.get('question_content')
         file_path = os.path.join('Temp_Save', file_name)
         if not file_name or not file_content:
-            return jsonify({"error": "Invalid request, missing fileName or fileContent"}), 400
+            return jsonify({"error": "Invalid request, missing question name or Question Content"}), 400
         result = questionprocessing.readFile(file_content, file_path, file_name)
         os.remove(file_path)
         
@@ -86,6 +90,7 @@ def upload_file_with_python():
         content = fileprocessing.readFile(file_content, file_path, file_name)
         verdict = sendToModel.sendFile_and_ChatGPTResponse(content)
         os.remove(file_path)
+        questionprocessing.eraseQuestion()
         return jsonify({"Verdict": verdict})
     else:
         return jsonify({"error": "Invalid content type, must be application/json"}), 400

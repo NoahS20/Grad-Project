@@ -9,6 +9,7 @@
       <!--For below: [disabled]="loading" and  -->
       <textarea #textarea
         [disabled]="loading"
+        id="type_area"
         appAutoResize class="chat-input"
         (input)="scrollToBottom()"
         (keydown.enter)= 'onEnterKeyPress($event,textarea)'
