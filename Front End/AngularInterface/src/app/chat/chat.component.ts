@@ -65,7 +65,7 @@ export class ChatComponent implements AfterViewChecked{
   onEnterKeyPress(event: any, textarea: HTMLTextAreaElement){
     event.preventDefault();
     if(this.checkEmpty(textarea)){
-      this.confirmDialog('Would like to send this answer and select question for this answer?').then(result => {
+      this.confirmDialog('Would you like to send this answer and select a question for this answer?').then(result => {
         if (result) {
           alert('Upload a question file that has the word question in the name')
           this.openQuestionDialog();
@@ -105,7 +105,7 @@ export class ChatComponent implements AfterViewChecked{
 
   ngAfterViewChecked() {
     if(this.firstTime == true){
-      this.messages.push({ text: 'Please read! You can upload a question and answer by clicking the purple paperclip button or you can type the answer first and then choose a question!', user: false });
+      this.messages.push({ text: 'PLEASE READ: Upload a question and answer by clicking the paperclip button. Or, type an answer below first, then choose a question!', user: false });
       this.firstTime = false;
     }
   }

@@ -1,5 +1,5 @@
 .file-upload-button {
-  background-color: #786f9b; /* Light gray background */
+  background-color: #c3ab78; /* Light gray background */
   color: #080808; /* Darker text color for contrast */
   border: none; /* No border */
   border-radius: 50%; /* Make it round */
@@ -15,7 +15,8 @@
   font-family: "Times New Roman";
   font-size: 16px;
   position: fixed;
-  right: 150px;
+  right: 605px;
+  top: 63px;
 }
 
 .question-upload-button {
@@ -66,7 +67,7 @@
 
 
 .file-upload-button:hover {
-  background-color: #c7bcda; /* Slightly darker shade on hover */
+  background-color:#cbc3b0; /* Slightly darker shade on hover */
 }
 
 .question-upload-button:hover {

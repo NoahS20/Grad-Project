@@ -58,7 +58,8 @@
   min-height: 38px;  /* Initial minimum height */
   box-sizing: border-box;  /* Border and padding included in width/height */
   overflow: hidden;  /* Prevents scrollbar appearance */
-  background: linear-gradient(135deg,#f49e5c,#4d9ac7) border-box;
+  /* background: linear-gradient(135deg,#f49e5c,#4d9ac7) border-box; */
+  background: #8cb6ce;
   font-family: "Times New Roman";
   font-size: 15px;
 
@@ -88,7 +89,7 @@
 }
 
 .send-button:hover {
-  background-color: #67a2c5; /* Slightly darker shade on hover */
+  background-color: #a1b4c0; /* Slightly darker shade on hover */
 }
 
 ::placeholder {
