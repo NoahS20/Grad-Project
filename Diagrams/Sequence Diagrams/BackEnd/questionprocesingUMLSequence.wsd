@@ -1,9 +1,53 @@
 @startuml
 actor User
-participant process_question
 
-User -> process_question: provide question
-process_question -> process_question: question.lower()
-process_question -> process_question: question.replace("?", "")
-process_question -> User: return processed question
+participant readFile
+participant saveFile
+participant checkIfDOne
+participant readtxt
+participant saveQuestion
+participant eraseQuestion
+participant getAIResponse
+
+User -> readFile: call readFile(filecontent, filepath, filename)
+alt filename ends with .txt
+    readFile -> saveFile: call saveFile(filecontent, filepath, filename)
+    alt saveFile returns success
+        saveFile -> checkIfDOne: call checkIfDOne(file_path)
+        checkIfDOne -> saveFile: file exists
+        saveFile -> readFile: return success
+        readFile -> User: return success
+    else saveFile returns error
+        saveFile -> readFile: return error
+        readFile -> User: return error
+    end
+else invalid file type
+    readFile -> User: return "Invalid filetype for question. Please enter a file with an extension of .txt"
+end
+
+saveFile -> base64: base64.b64decode(file_content)
+saveFile -> os: os.path.join('Temp_Save', file_name)
+saveFile -> saveFile: open file_path in write mode
+saveFile -> checkIfDOne: call checkIfDOne(file_path)
+checkIfDOne -> saveFile: file exists
+saveFile -> file: write file_content
+saveFile -> saveQuestion: call saveQuestion(file_path, file_content)
+saveQuestion -> saveQuestion: open question_path in write mode
+saveQuestion -> file: write file_content
+saveQuestion -> saveFile: return success or error
+saveFile -> saveFile: convert file_content to string
+saveFile -> readFile: return "Uploaded question file " + file_name + ": " + file_content
+
+readFile -> User: return result
+
+readtxt -> checkIfDOne: call checkIfDOne(file_path)
+checkIfDOne -> readtxt: file exists
+readtxt -> readtxt: open file_path in read mode
+readtxt -> readtxt: read file line by line
+readtxt -> User: return contents
+
+eraseQuestion -> os: os.path.join('Temp_Save', 'questionsFORAI129.txt')
+eraseQuestion -> eraseQuestion: open question_path in write mode
+eraseQuestion -> file: write empty string
+eraseQuestion -> User: return success or error
 @enduml

@@ -1,13 +1,55 @@
 @startuml
 actor User
-participant send_to_model
-participant process_question
-participant get_ai_response
 
-User -> send_to_model: provide question
-send_to_model -> process_question: call process_question(question)
-process_question -> send_to_model: return processed question
-send_to_model -> get_ai_response: call get_ai_response(processed question)
-get_ai_response -> send_to_model: return response
-send_to_model -> User: return response
+participant sendFile_and_ChatGPTResponse
+participant sendTypedResponse_and_ChatGPTResponse
+participant readtxt
+participant checkIfDOne
+participant getAIResponse
+participant replicateLlama3APICall
+participant os
+participant time
+
+User -> sendFile_and_ChatGPTResponse: call sendFile_and_ChatGPTResponse(file_content)
+sendFile_and_ChatGPTResponse -> readtxt: call readtxt('.\Temp_Save\questionsFORAI129.txt')
+readtxt -> os: os.path.isfile(file_path)
+alt file does not exist
+    readtxt -> time: time.sleep(5)
+else file exists
+    readtxt -> readtxt: open file_path in read mode
+    readtxt -> file: read lines
+    readtxt -> sendFile_and_ChatGPTResponse: return contents
+end
+
+alt questions is empty
+    sendFile_and_ChatGPTResponse -> User: return "Please upload a question before sending answers."
+else questions is not empty
+    sendFile_and_ChatGPTResponse -> getAIResponse: send_request(questions)
+    getAIResponse -> sendFile_and_ChatGPTResponse: return AIresponse
+    sendFile_and_ChatGPTResponse -> replicateLlama3APICall: askLlama3(file_content, AIresponse, questions)
+    replicateLlama3APICall -> sendFile_and_ChatGPTResponse: return verdict
+    sendFile_and_ChatGPTResponse -> User: return verdict
+end
+
+User -> sendTypedResponse_and_ChatGPTResponse: call sendTypedResponse_and_ChatGPTResponse(student_answer)
+sendTypedResponse_and_ChatGPTResponse -> readtxt: call readtxt('.\Temp_Save\questionsFORAI129.txt')
+readtxt -> os: os.path.isfile(file_path)
+alt file does not exist
+    readtxt -> time: time.sleep(5)
+else file exists
+    readtxt -> readtxt: open file_path in read mode
+    readtxt -> file: read lines
+    readtxt -> sendTypedResponse_and_ChatGPTResponse: return contents
+end
+
+alt questions is empty
+    sendTypedResponse_and_ChatGPTResponse -> User: return "Please upload a question before sending answers."
+else questions is not empty
+    sendTypedResponse_and_ChatGPTResponse -> getAIResponse: send_request(questions)
+    getAIResponse -> sendTypedResponse_and_ChatGPTResponse: return AIresponse
+    sendTypedResponse_and_ChatGPTResponse -> replicateLlama3APICall: askLlama3(student_answer, AIresponse, questions)
+    replicateLlama3APICall -> sendTypedResponse_and_ChatGPTResponse: return verdict
+    sendTypedResponse_and_ChatGPTResponse -> User: return verdict
+end
+
 @enduml

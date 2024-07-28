@@ -1,40 +1,81 @@
 @startuml
 actor User
+
 participant readFile
 participant saveFile
-participant checkIfDone
 participant readtxt
 participant readdoc
 participant readpdf
+participant checkIfDOne
+participant os
+participant time
+participant textract
+participant pypdf
 
-User -> readFile: provide filecontent, filepath, filename
+User -> readFile: call readFile(filecontent, filepath, filename)
 readFile -> saveFile: call saveFile(filecontent, filepath, filename)
-saveFile -> saveFile: decode and save file
+saveFile -> base64: base64.b64decode(file_content)
+saveFile -> os: os.path.join('Temp_Save', file_name)
+saveFile -> saveFile: open file_path in write mode
+saveFile -> file: write file_content
 saveFile -> readFile: return "success"
-alt file extension is .txt
-    readFile -> readtxt: call readtxt(filepath)
-else file extension is .doc or .docx
-    readFile -> readdoc: call readdoc(filepath)
-else file extension is .pdf
-    readFile -> readpdf: call readpdf(filepath)
-else invalid filetype
-    readFile -> User: return "Invalid filetype"
-end
-group read file content
-    readtxt -> checkIfDone: check if file exists
-    checkIfDone -> readtxt: file exists
-    readtxt -> readtxt: read file content
-    readtxt -> readFile: return file content
 
-    readdoc -> checkIfDone: check if file exists
-    checkIfDone -> readdoc: file exists
-    readdoc -> readdoc: read file content
-    readdoc -> readFile: return file content
+alt saveFile result is "success"
+    readFile -> os: os.path.join('Temp_Save', filename)
+    
+    alt filename ends with .txt
+        readFile -> readtxt: call readtxt(filepath)
+        readtxt -> os: os.path.isfile(file_path)
+        readtxt -> checkIfDOne: call checkIfDOne(file_path)
+        checkIfDOne -> os: os.path.isfile(file_path)
+        alt file does not exist
+            checkIfDOne -> time: time.sleep(5)
+        else file exists
+            checkIfDOne -> readtxt: return success
+        end
+        readtxt -> readtxt: open file_path in read mode
+        readtxt -> file: read lines
+        readtxt -> readFile: return contents
+        readFile -> User: return contents
 
-    readpdf -> checkIfDone: check if file exists
-    checkIfDone -> readpdf: file exists
-    readpdf -> readpdf: read file content
-    readpdf -> readFile: return file content
+    else filename ends with .doc or .docx
+        readFile -> readdoc: call readdoc(filepath)
+        readdoc -> checkIfDOne: call checkIfDOne(file_path)
+        checkIfDOne -> os: os.path.isfile(file_path)
+        alt file does not exist
+            checkIfDOne -> time: time.sleep(5)
+        else file exists
+            checkIfDOne -> readdoc: return success
+        end
+        readdoc -> textract: textract.process(file_path)
+        textract -> readdoc: return contents
+        readdoc -> readdoc: decode contents
+        readdoc -> readFile: return contents
+        readFile -> User: return contents
+
+    else filename ends with .pdf
+        readFile -> readpdf: call readpdf(filepath)
+        readpdf -> checkIfDOne: call checkIfDOne(file_path)
+        checkIfDOne -> os: os.path.isfile(file_path)
+        alt file does not exist
+            checkIfDOne -> time: time.sleep(5)
+        else file exists
+            checkIfDOne -> readpdf: return success
+        end
+        readpdf -> pypdf: pypdf.PdfReader(file_path)
+        pypdf -> readpdf: return contents
+        loop process pages
+            readpdf -> readpdf: extract text from page
+        end
+        readpdf -> readFile: return text
+        readFile -> User: return text
+
+    else invalid file type
+        readFile -> User: return "Invalid filetype. Please enter a file with an extension of .txt, .doc, .docx, or .pdf"
+    end
+else saveFile result is not "success"
+    saveFile -> readFile: return result
+    readFile -> User: return result
 end
-readFile -> User: return file content
+
 @enduml

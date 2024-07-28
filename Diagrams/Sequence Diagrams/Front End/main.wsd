@@ -4,16 +4,16 @@ actor User
 participant Browser
 participant platformBrowserDynamic
 participant AppModule
+participant console
 
 User -> Browser: Open Application
-Browser -> platformBrowserDynamic: platformBrowserDynamic().bootstrapModule(AppModule, { ngZoneEventCoalescing: true })
-platformBrowserDynamic -> AppModule: Initialize AppModule
-AppModule -> AppModule: Load and Configure Module
-
-alt Bootstrap Successful
-    platformBrowserDynamic -> Browser: Application Ready
-else Error
-    platformBrowserDynamic -> Browser: Log Error (console.error(err))
+Browser -> platformBrowserDynamic: Load platformBrowserDynamic
+platformBrowserDynamic -> AppModule: bootstrapModule(AppModule, { ngZoneEventCoalescing: true })
+alt Successful Bootstrap
+    AppModule -> platformBrowserDynamic: return AppModule Instance
+    platformBrowserDynamic -> Browser: Application Bootstrapped
+else Bootstrap Error
+    platformBrowserDynamic -> console: console.error(err)
 end
 
 @enduml

@@ -1,14 +1,20 @@
 @startuml
 actor User
-participant replicate_llama_api_call
-participant requests
 
-User -> replicate_llama_api_call: provide payload
-replicate_llama_api_call -> requests: POST /endpoint (payload, headers)
-requests -> replicate_llama_api_call: return response
-alt exception
-    replicate_llama_api_call -> User: return {"error": str(e)}
-else no exception
-    replicate_llama_api_call -> User: return response.json()
+participant askLlama3
+participant os
+participant replicate.Client
+
+User -> askLlama3: call askLlama3(user_input, ai_input, questions)
+askLlama3 -> os: set REPLICATE_API_TOKEN environment variable
+askLlama3 -> replicate.Client: create Client with API token
+replicate.Client -> askLlama3: return Client instance
+askLlama3 -> replicate.Client: run API with inputs
+replicate.Client -> askLlama3: return content
+
+loop process content
+    askLlama3 -> askLlama3: format content
 end
+
+askLlama3 -> User: return formatted_content
 @enduml

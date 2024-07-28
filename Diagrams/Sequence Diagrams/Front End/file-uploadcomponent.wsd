@@ -3,15 +3,36 @@ actor User
 
 participant FileUploadComponent
 participant fileTransferring
+participant ElementRef
 
-User -> FileUploadComponent: Select file (onFileSelected)
-FileUploadComponent -> FileUploadComponent: readFile(file)
-FileUploadComponent -> fileTransferring: fileTransfer(file)
-fileTransferring -> dataSource: next(file)
+User -> FileUploadComponent: triggerFileInput(event)
+FileUploadComponent -> FileUploadComponent: alert message
+FileUploadComponent -> fileInput: click()
 
-User -> FileUploadComponent: Select question file (onQuestionSelected)
+User -> FileUploadComponent: onQuestionSelected(event)
 FileUploadComponent -> FileUploadComponent: readQuestion(file)
 FileUploadComponent -> fileTransferring: questionTransfer(file)
 fileTransferring -> questionSource: next(file)
+FileUploadComponent -> FileUploadComponent: onFileChange()
+
+User -> FileUploadComponent: onFilesSelected(event)
+FileUploadComponent -> FileUploadComponent: parseFiles(files)
+alt totalFiles > maxFiles
+    FileUploadComponent -> User: alert("You can only upload a maximum of 2 files.")
+else totalFiles <= maxFiles
+    FileUploadComponent -> FileUploadComponent: confirmDialog("Do you want to send the chosen files: " + questionFileNames[0] + " " + fileNames[0])
+    FileUploadComponent -> User: showConfirmDialog
+    User -> FileUploadComponent: handleConfirm(result)
+    alt result is true
+        FileUploadComponent -> FileUploadComponent: readQuestion(questionFiles[0])
+        FileUploadComponent -> fileTransferring: questionTransfer(questionFiles[0])
+        fileTransferring -> questionSource: next(questionFiles[0])
+        FileUploadComponent -> FileUploadComponent: readFile(answerFiles[0])
+        FileUploadComponent -> fileTransferring: fileTransfer(answerFiles[0])
+        fileTransferring -> dataSource: next(answerFiles[0])
+    end
+    FileUploadComponent -> FileUploadComponent: pop questionFileNames, fileNames, answerFiles, questionFiles
+end
+FileUploadComponent -> FileUploadComponent: onFileChange()
 
 @enduml

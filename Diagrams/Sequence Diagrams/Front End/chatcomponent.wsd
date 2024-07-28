@@ -1,19 +1,15 @@
 @startuml
 actor User
-
 participant ChatComponent
 participant fileTransferring
-participant Subscription
 participant ApiService
 participant FileReader
-participant HttpClient
+participant Subscription
 
-User -> ChatComponent: Interact with component
-
-alt User sends message
-    User -> ChatComponent: sendMessage(textarea)
-    ChatComponent -> ChatComponent: loading = true
-    ChatComponent -> ChatComponent: scrollToBottom()
+User -> ChatComponent: sendMessage(textarea)
+ChatComponent -> ChatComponent: loading = true
+ChatComponent -> ChatComponent: scrollToBottom()
+alt inputMessage.trim() is not empty
     ChatComponent -> ChatComponent: messages.push({ text: inputMessage, user: true })
     ChatComponent -> ChatComponent: sendData(inputMessage)
     ChatComponent -> ApiService: postData(inputMessage)
@@ -23,51 +19,63 @@ alt User sends message
     ChatComponent -> ChatComponent: respond(response.Verdict)
     ChatComponent -> ChatComponent: messages.push({ text: response.Verdict, user: false })
     ChatComponent -> ChatComponent: scrollToBottom()
+    ChatComponent -> ChatComponent: inputMessage = ''
+    ChatComponent -> textarea: textarea.style.height = '38px'
     ChatComponent -> ChatComponent: loading = false
 end
 
-alt User selects a file
-    User -> ChatComponent: onFileSelected(event)
-    ChatComponent -> ChatComponent: readFile(file)
-    ChatComponent -> fileTransferring: fileTransfer(file)
-    fileTransferring -> dataSource: next(file)
+User -> ChatComponent: confirmQuestionText(textarea)
+alt checkEmpty(textarea) is true
+    ChatComponent -> ChatComponent: confirmDialog('Would like to send this answer and select a question file for this answer?')
+    ChatComponent -> User: showConfirmDialog
+    User -> ChatComponent: handleConfirm(result)
+    alt result is true
+        ChatComponent -> ChatComponent: openQuestionDialog()
+        ChatComponent -> ChatComponent: sendMessage(textarea)
+    end
 end
 
-alt User selects a question file
-    User -> ChatComponent: onQuestionSelected(event)
-    ChatComponent -> ChatComponent: readQuestion(file)
-    ChatComponent -> fileTransferring: questionTransfer(file)
-    fileTransferring -> questionSource: next(file)
+User -> ChatComponent: onEnterKeyPress(event, textarea)
+ChatComponent -> event: event.preventDefault()
+alt checkEmpty(textarea) is true
+    ChatComponent -> ChatComponent: confirmDialog('Would like to send this answer and select question for this answer?')
+    ChatComponent -> User: showConfirmDialog
+    User -> ChatComponent: handleConfirm(result)
+    alt result is true
+        ChatComponent -> ChatComponent: openQuestionDialog()
+        ChatComponent -> ChatComponent: sendMessage(textarea)
+    end
 end
 
-alt Subscription receives new file data
-    fileTransferring -> Subscription: currentData.subscribe(data)
-    Subscription -> ChatComponent: return data
-    ChatComponent -> ChatComponent: respondFile(data)
-    ChatComponent -> ChatComponent: sendFile(data)
-    ChatComponent -> FileReader: readAsDataURL(file)
-    FileReader -> ChatComponent: return base64
-    ChatComponent -> ApiService: upload_file(file.name, base64Content)
-    ApiService -> HttpClient: POST /api/upload
-    HttpClient -> ApiService: return response
-    ApiService -> ChatComponent: return response
-    ChatComponent -> ChatComponent: respond(response.Verdict)
-    ChatComponent -> ChatComponent: messages.push({ text: response.Verdict, user: false })
+User -> ChatComponent: openQuestionDialog()
+ChatComponent -> document: document.getElementById("questionInput")
+alt questionInput exists
+    ChatComponent -> questionInput: questionInput.click()
+    ChatComponent -> ChatComponent: question_uploaded = true
 end
 
-alt Subscription receives new question data
-    fileTransferring -> Subscription: question.subscribe(data)
-    Subscription -> ChatComponent: return data
-    ChatComponent -> ChatComponent: respondQuestion(data)
-    ChatComponent -> ChatComponent: sendQuestion(data)
-    ChatComponent -> FileReader: readAsDataURL(file)
-    FileReader -> ChatComponent: return base64
-    ChatComponent -> ApiService: upload_question(file.name, base64Content)
-    ApiService -> HttpClient: POST /api/question
-    HttpClient -> ApiService: return response
-    ApiService -> ChatComponent: return response
-    ChatComponent -> ChatComponent: respond(response.Result)
-    ChatComponent -> ChatComponent: messages.push({ text: response.Result, user: false })
-end
+fileTransferring -> Subscription: currentData.subscribe(data)
+Subscription -> ChatComponent: return data
+ChatComponent -> ChatComponent: respondFile(data)
+
+fileTransferring -> Subscription: question.subscribe(data)
+Subscription -> ChatComponent: return data
+ChatComponent -> ChatComponent: respondQuestion(data)
+
+ChatComponent -> FileReader: readAsDataURL(file)
+FileReader -> ChatComponent: return base64
+ChatComponent -> ApiService: upload_question(file.name, base64Content)
+ApiService -> HttpClient: POST /api/question
+HttpClient -> ApiService: return response
+ApiService -> ChatComponent: return response
+ChatComponent -> ChatComponent: respond(response.Result)
+
+ChatComponent -> FileReader: readAsDataURL(file)
+FileReader -> ChatComponent: return base64
+ChatComponent -> ApiService: upload_file(file.name, base64Content)
+ApiService -> HttpClient: POST /api/upload
+HttpClient -> ApiService: return response
+ApiService -> ChatComponent: return response
+ChatComponent -> ChatComponent: respond(response.Verdict)
 
 @enduml

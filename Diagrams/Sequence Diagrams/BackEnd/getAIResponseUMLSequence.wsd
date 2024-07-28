@@ -1,10 +1,23 @@
 @startuml
 actor User
-participant get_ai_response
-participant openai.Completion
 
-User -> get_ai_response: provide prompt, model
-get_ai_response -> openai.Completion: create(engine=model, prompt=prompt, max_tokens=150)
-openai.Completion -> get_ai_response: return response
-get_ai_response -> User: return response.choices[0].text.strip()
+participant send_request
+participant OpenAI
+participant client.chat.completions
+
+User -> send_request: call send_request(questions)
+send_request -> OpenAI: create OpenAI client with api_key
+OpenAI -> send_request: return client instance
+send_request -> client.chat.completions: create(model, messages, stream=True)
+client.chat.completions -> send_request: return stream
+
+loop process stream
+    send_request -> send_request: process chunk
+    alt chunk.choices[0].delta.content is not None
+        send_request -> send_request: append chunk content to response
+    end
+end
+
+send_request -> send_request: response.rstrip('\n')
+send_request -> User: return response
 @enduml
