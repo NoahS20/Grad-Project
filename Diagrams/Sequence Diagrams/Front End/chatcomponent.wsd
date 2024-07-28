@@ -1,10 +1,13 @@
 @startuml
 actor User
+
 participant ChatComponent
 participant fileTransferring
+participant Subscription
 participant ApiService
 participant FileReader
-participant Subscription
+participant ElementRef
+participant HttpClient
 
 User -> ChatComponent: sendMessage(textarea)
 ChatComponent -> ChatComponent: loading = true
@@ -31,19 +34,19 @@ alt checkEmpty(textarea) is true
     User -> ChatComponent: handleConfirm(result)
     alt result is true
         ChatComponent -> ChatComponent: openQuestionDialog()
-        ChatComponent -> ChatComponent: sendMessage(textarea)
+        ChatComponent -> ChatComponent: savedText = textarea
     end
 end
 
 User -> ChatComponent: onEnterKeyPress(event, textarea)
 ChatComponent -> event: event.preventDefault()
 alt checkEmpty(textarea) is true
-    ChatComponent -> ChatComponent: confirmDialog('Would like to send this answer and select question for this answer?')
+    ChatComponent -> ChatComponent: confirmDialog('Would you like to send this answer and select a question for this answer?')
     ChatComponent -> User: showConfirmDialog
     User -> ChatComponent: handleConfirm(result)
     alt result is true
         ChatComponent -> ChatComponent: openQuestionDialog()
-        ChatComponent -> ChatComponent: sendMessage(textarea)
+        ChatComponent -> ChatComponent: savedText = textarea
     end
 end
 
