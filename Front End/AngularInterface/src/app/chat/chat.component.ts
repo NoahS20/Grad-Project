@@ -28,6 +28,7 @@ export class ChatComponent implements AfterViewChecked{
   confirmMessage = '';
   confirmResolve!: (result: boolean) => void;
   question_uploaded = false
+  savedText: any;
 
   constructor(
     private dataService: fileTransferring,
@@ -45,7 +46,7 @@ export class ChatComponent implements AfterViewChecked{
         this.inputMessage = '';  // Fixed typo here
         textarea.style.height = '38px';  // Adjust this value to match your default size
         this.loading = false;
-      }, 9125);
+      }, 5125);
     }
   }
 
@@ -56,7 +57,7 @@ export class ChatComponent implements AfterViewChecked{
             alert('Upload a question file with the word question in it')
             console.log(textarea)
             this.openQuestionDialog();
-            this.sendMessage(textarea);
+            this.savedText = textarea;
           }
       });
     }
@@ -69,7 +70,7 @@ export class ChatComponent implements AfterViewChecked{
         if (result) {
           alert('Upload a question file that has the word question in the name')
           this.openQuestionDialog();
-          this.sendMessage(textarea);
+          this.savedText = textarea;
         }
       });
     }
@@ -157,7 +158,9 @@ export class ChatComponent implements AfterViewChecked{
 
   respondQuestion(file: File): void {
     console.log("recieved question");
-    console.log(file)
+    if(typeof file != "string"){
+      this.sendMessage(this.savedText)
+    }
     this.sendQuestion(file)
   }
 

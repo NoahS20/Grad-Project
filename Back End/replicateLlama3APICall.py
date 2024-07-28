@@ -1,5 +1,4 @@
 import os
-
 import replicate
 
 def askLlama3(user_input, ai_input, questions):
