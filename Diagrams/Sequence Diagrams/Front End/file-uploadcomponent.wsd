@@ -26,20 +26,26 @@ alt totalFiles > maxFiles
     FileUploadComponent -> User: alert max files error
 else totalFiles <= maxFiles
     alt files contain a question file
-        FileUploadComponent -> FileUploadComponent: confirmDialog(message)
-        FileUploadComponent -> User: showConfirmDialog
-        User -> FileUploadComponent: handleConfirm(result)
-        alt result is true
-            FileUploadComponent -> FileUploadComponent: readQuestion(questionFiles[0])
-            FileUploadComponent -> fileTransferring: questionTransfer(questionFiles[0])
-            fileTransferring -> fileTransferring: next(questionFiles[0])
-            FileUploadComponent -> FileUploadComponent: readFile(answerFiles[0])
-            FileUploadComponent -> fileTransferring: fileTransfer(answerFiles[0])
-            fileTransferring -> fileTransferring: next(answerFiles[0])
-            FileUploadComponent -> FileUploadComponent: pop questionFileNames, fileNames, answerFiles, questionFiles
+        alt no answer files
+            FileUploadComponent -> FileUploadComponent: popAll()
+            FileUploadComponent -> User: alert error message
+        else contains answer files
+            FileUploadComponent -> FileUploadComponent: confirmDialog(message)
+            FileUploadComponent -> User: showConfirmDialog
+            User -> FileUploadComponent: handleConfirm(result)
+            alt result is true
+                FileUploadComponent -> FileUploadComponent: readQuestion(questionFiles[0])
+                FileUploadComponent -> fileTransferring: questionTransfer(questionFiles[0])
+                fileTransferring -> fileTransferring: next(questionFiles[0])
+                FileUploadComponent -> FileUploadComponent: readFile(answerFiles[0])
+                FileUploadComponent -> fileTransferring: fileTransfer(answerFiles[0])
+                fileTransferring -> fileTransferring: next(answerFiles[0])
+                FileUploadComponent -> FileUploadComponent: popAll()
+            end
         end
-    else files do not contain a question file
+    else no question files
         FileUploadComponent -> User: alert error message
+        FileUploadComponent -> FileUploadComponent: popAll()
     end
 end
 FileUploadComponent -> ElementRef: fileInput.nativeElement.value = ''

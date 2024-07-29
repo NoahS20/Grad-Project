@@ -22,7 +22,7 @@ alt filename ends with .txt
         readFile -> User: return error
     end
 else invalid file type
-    readFile -> User: return "Invalid filetype for question. Please enter a file with an extension of .txt"
+    readFile -> User: return "Invalid filetype for question file. Please enter a file with an extension of .txt"
 end
 
 saveFile -> base64: base64.b64decode(file_content)

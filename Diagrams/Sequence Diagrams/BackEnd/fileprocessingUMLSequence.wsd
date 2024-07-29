@@ -71,7 +71,7 @@ alt saveFile result is "success"
         readFile -> User: return text
 
     else invalid file type
-        readFile -> User: return "Invalid filetype. Please enter a file with an extension of .txt, .doc, .docx, or .pdf"
+        readFile -> User: return "Invalid filetype for answer file. Please enter a file with an extension of .txt, .doc, .docx, or .pdf"
     end
 else saveFile result is not "success"
     saveFile -> readFile: return result

@@ -13,7 +13,7 @@ def readFile(filecontent, filepath, filename):
             return result
         return result
     else:
-        return "Error: Invalid filetype for question. Please enter a file with an extension of .txt"
+        return "Error: Invalid filetype for question file. Please enter a file with an extension of .txt"
 
 def readtxt(file_path):
     contents = ""
