@@ -63,7 +63,8 @@ def upload_question():
             return jsonify({"error": "Invalid request, missing question name or file content"}), 400
         file_path = os.path.join('Temp_Save', file_name)
         result = questionprocessing.readFile(file_content, file_path, file_name)
-        os.remove(file_path)
+        if(("Error: Invalid" in result) == False):
+            os.remove(file_path)
         return jsonify({"Result": result})
     else:
         return jsonify({"error": "Invalid content type, must be application/json"}), 400
@@ -80,8 +81,9 @@ def upload_file_with_python():
         if not file_name or not file_content:
             return jsonify({"error": "Invalid request, missing question name or Question Content"}), 400
         result = questionprocessing.readFile(file_content, file_path, file_name)
-        os.remove(file_path)
-        
+        if(("Error: Invalid" in result) == False):
+            os.remove(file_path)
+                
         file_name = data.get('answer_name')
         file_content = data.get('answer_content')
         file_path = os.path.join('Temp_Save', file_name)

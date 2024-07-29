@@ -1,123 +1,124 @@
 @startuml
 actor User
-participant FlaskApp
-participant request
-participant jsonify
-participant os
+
+participant FlaskApp as app
+participant FlaskRequest as request
+participant sendToModel
 participant fileprocessing
 participant questionprocessing
-participant sendToModel
-participant SSL
-participant SSLify
+participant os
+participant jsonify
 
-User -> FlaskApp: POST /api/data
-FlaskApp -> request: request.is_json
+User -> app: POST /api/data
+app -> FlaskRequest: request.is_json
 alt request is JSON
-    FlaskApp -> request: request.get_json()
-    FlaskApp -> sendToModel: sendTypedResponse_and_ChatGPTResponse(data)
-    sendToModel -> FlaskApp: return data
-    FlaskApp -> questionprocessing: eraseQuestion()
-    questionprocessing -> FlaskApp: return success
-    FlaskApp -> jsonify: jsonify(response)
-    FlaskApp -> User: return response
+    FlaskRequest -> FlaskRequest: get_json()
+    FlaskRequest -> sendToModel: sendTypedResponse_and_ChatGPTResponse(data)
+    sendToModel -> sendToModel: process data
+    sendToModel -> FlaskRequest: return data
+    FlaskRequest -> questionprocessing: eraseQuestion()
+    questionprocessing -> questionprocessing: process erase
+    FlaskRequest -> jsonify: jsonify({"Verdict": data})
+    jsonify -> User: return response
 else request is not JSON
-    FlaskApp -> questionprocessing: eraseQuestion()
-    questionprocessing -> FlaskApp: return success
-    FlaskApp -> jsonify: jsonify(error)
-    FlaskApp -> User: return error
+    FlaskRequest -> questionprocessing: eraseQuestion()
+    questionprocessing -> questionprocessing: process erase
+    FlaskRequest -> jsonify: jsonify({"error": "Invalid content type, must be application/json"})
+    jsonify -> User: return 400 error
 end
 
-User -> FlaskApp: POST /api/upload
-FlaskApp -> request: request.is_json
+User -> app: POST /api/upload
+app -> FlaskRequest: request.is_json
 alt request is JSON
-    FlaskApp -> request: request.get_json()
-    FlaskApp -> FlaskApp: app.logger.debug(f"Request data: {data}")
-    FlaskApp -> FlaskApp: check file_name and file_content
-    alt file_name or file_content missing
-        FlaskApp -> jsonify: jsonify(error)
-        FlaskApp -> User: return error
-    else file_name and file_content present
-        FlaskApp -> os: os.path.join('Temp_Save', file_name)
-        FlaskApp -> fileprocessing: readFile(file_content, file_path, file_name)
-        fileprocessing -> FlaskApp: return content
-        FlaskApp -> sendToModel: sendFile_and_ChatGPTResponse(content)
-        sendToModel -> FlaskApp: return verdict
-        FlaskApp -> os: os.remove(file_path)
-        FlaskApp -> questionprocessing: eraseQuestion()
-        questionprocessing -> FlaskApp: return success
-        FlaskApp -> jsonify: jsonify(verdict)
-        FlaskApp -> User: return verdict
+    FlaskRequest -> FlaskRequest: get_json()
+    FlaskRequest -> FlaskRequest: get file details
+    alt file details missing
+        FlaskRequest -> jsonify: jsonify({"error": "Invalid request, missing fileName or fileContent"})
+        jsonify -> User: return 400 error
+    else file details present
+        FlaskRequest -> os: os.path.join('Temp_Save', file_name)
+        FlaskRequest -> fileprocessing: readFile(file_content, file_path, file_name)
+        fileprocessing -> fileprocessing: process file
+        fileprocessing -> FlaskRequest: return content
+        FlaskRequest -> sendToModel: sendFile_and_ChatGPTResponse(content)
+        sendToModel -> sendToModel: process content
+        sendToModel -> FlaskRequest: return verdict
+        FlaskRequest -> os: os.remove(file_path)
+        FlaskRequest -> questionprocessing: eraseQuestion()
+        questionprocessing -> questionprocessing: process erase
+        FlaskRequest -> jsonify: jsonify({"Verdict": verdict})
+        jsonify -> User: return response
     end
 else request is not JSON
-    FlaskApp -> questionprocessing: eraseQuestion()
-    questionprocessing -> FlaskApp: return success
-    FlaskApp -> jsonify: jsonify(error)
-    FlaskApp -> User: return error
+    FlaskRequest -> questionprocessing: eraseQuestion()
+    questionprocessing -> questionprocessing: process erase
+    FlaskRequest -> jsonify: jsonify({"error": "Invalid content type, must be application/json"})
+    jsonify -> User: return 400 error
 end
 
-User -> FlaskApp: POST /api/question
-FlaskApp -> request: request.is_json
+User -> app: POST /api/question
+app -> FlaskRequest: request.is_json
 alt request is JSON
-    FlaskApp -> request: request.get_json()
-    FlaskApp -> FlaskApp: app.logger.debug(f"Request data: {data}")
-    FlaskApp -> FlaskApp: check file_name and file_content
-    alt file_name or file_content missing
-        FlaskApp -> jsonify: jsonify(error)
-        FlaskApp -> User: return error
-    else file_name and file_content present
-        FlaskApp -> os: os.path.join('Temp_Save', file_name)
-        FlaskApp -> questionprocessing: readFile(file_content, file_path, file_name)
-        questionprocessing -> FlaskApp: return result
-        FlaskApp -> os: os.remove(file_path)
-        FlaskApp -> jsonify: jsonify(result)
-        FlaskApp -> User: return result
+    FlaskRequest -> FlaskRequest: get_json()
+    FlaskRequest -> FlaskRequest: get question details
+    alt question details missing
+        FlaskRequest -> jsonify: jsonify({"error": "Invalid request, missing question name or file content"})
+        jsonify -> User: return 400 error
+    else question details present
+        FlaskRequest -> os: os.path.join('Temp_Save', file_name)
+        FlaskRequest -> questionprocessing: readFile(file_content, file_path, file_name)
+        questionprocessing -> questionprocessing: process file
+        questionprocessing -> FlaskRequest: return result
+        alt no invalid error in result
+            FlaskRequest -> os: os.remove(file_path)
+        end
+        FlaskRequest -> jsonify: jsonify({"Result": result})
+        jsonify -> User: return response
     end
 else request is not JSON
-    FlaskApp -> jsonify: jsonify(error)
-    FlaskApp -> User: return error
+    FlaskRequest -> jsonify: jsonify({"error": "Invalid content type, must be application/json"})
+    jsonify -> User: return 400 error
 end
 
-User -> FlaskApp: POST /api/upload_python
-FlaskApp -> request: request.is_json
+User -> app: POST /api/upload_python
+app -> FlaskRequest: request.is_json
 alt request is JSON
-    FlaskApp -> request: request.get_json()
-    FlaskApp -> FlaskApp: check question_name and question_content
-    alt question_name or question_content missing
-        FlaskApp -> jsonify: jsonify(error)
-        FlaskApp -> User: return error
-    else question_name and question_content present
-        FlaskApp -> os: os.path.join('Temp_Save', file_name)
-        FlaskApp -> questionprocessing: readFile(file_content, file_path, file_name)
-        questionprocessing -> FlaskApp: return result
-        FlaskApp -> os: os.remove(file_path)
-        FlaskApp -> FlaskApp: check file_name and file_content
-        alt file_name or file_content missing
-            FlaskApp -> jsonify: jsonify(error)
-            FlaskApp -> User: return error
-        else file_name and file_content present
-            FlaskApp -> os: os.path.join('Temp_Save', file_name)
-            FlaskApp -> fileprocessing: readFile(file_content, file_path, file_name)
-            fileprocessing -> FlaskApp: return content
-            FlaskApp -> sendToModel: sendFile_and_ChatGPTResponse(content)
-            sendToModel -> FlaskApp: return verdict
-            FlaskApp -> os: os.remove(file_path)
-            FlaskApp -> questionprocessing: eraseQuestion()
-            questionprocessing -> FlaskApp: return success
-            FlaskApp -> jsonify: jsonify(verdict)
-            FlaskApp -> User: return verdict
+    FlaskRequest -> FlaskRequest: get_json()
+    FlaskRequest -> FlaskRequest: get question details
+    alt question details missing
+        FlaskRequest -> jsonify: jsonify({"error": "Invalid request, missing question name or Question Content"})
+        jsonify -> User: return 400 error
+    else question details present
+        FlaskRequest -> os: os.path.join('Temp_Save', file_name)
+        FlaskRequest -> questionprocessing: readFile(file_content, file_path, file_name)
+        questionprocessing -> questionprocessing: process file
+        questionprocessing -> FlaskRequest: return result
+        alt no invalid error in result
+            FlaskRequest -> os: os.remove(file_path)
+        end
+
+        FlaskRequest -> FlaskRequest: get answer details
+        alt answer details missing
+            FlaskRequest -> jsonify: jsonify({"error": "Invalid request, missing fileName or fileContent"})
+            jsonify -> User: return 400 error
+        else answer details present
+            FlaskRequest -> os: os.path.join('Temp_Save', file_name)
+            FlaskRequest -> fileprocessing: readFile(file_content, file_path, file_name)
+            fileprocessing -> fileprocessing: process file
+            fileprocessing -> FlaskRequest: return content
+            FlaskRequest -> sendToModel: sendFile_and_ChatGPTResponse(content)
+            sendToModel -> sendToModel: process content
+            sendToModel -> FlaskRequest: return verdict
+            FlaskRequest -> os: os.remove(file_path)
+            FlaskRequest -> questionprocessing: eraseQuestion()
+            questionprocessing -> questionprocessing: process erase
+            FlaskRequest -> jsonify: jsonify({"Verdict": verdict})
+            jsonify -> User: return response
         end
     end
 else request is not JSON
-    FlaskApp -> questionprocessing: eraseQuestion()
-    questionprocessing -> FlaskApp: return success
-    FlaskApp -> jsonify: jsonify(error)
-    FlaskApp -> User: return error
-end
-
-User -> FlaskApp: HTTPS request
-FlaskApp -> SSLify: check if request is secure
-alt request is not secure
-    SSLify -> FlaskApp: redirect to HTTPS
+    FlaskRequest -> jsonify: jsonify({"error": "Invalid content type, must be application/json"})
+    jsonify -> User: return 400 error
 end
 
 @enduml

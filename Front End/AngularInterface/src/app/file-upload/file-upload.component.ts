@@ -56,6 +56,9 @@ export class FileUploadComponent{
     if (totalFiles > this.maxFiles) {
       alert(`You can only upload a maximum of ${this.maxFiles} files.`);
     }
+    else if(totalFiles == 1){
+      alert('Error: Only one file selected. Please select two files')
+    }
     else{
       if(this.parseFiles(files)){
         if(this.fileNames === undefined || this.fileNames.length == 0){

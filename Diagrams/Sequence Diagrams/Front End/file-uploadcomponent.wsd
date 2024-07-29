@@ -1,53 +1,47 @@
 @startuml
 actor User
 
-participant FileUploadComponent
-participant ElementRef
-participant fileTransferring
+participant FileUploadComponent as FUC
+participant FileTransferService as FTS
 
-User -> FileUploadComponent: triggerFileInput(event)
-FileUploadComponent -> FileUploadComponent: alert message
-FileUploadComponent -> ElementRef: fileInput.nativeElement.click()
+User -> FUC: triggerFileInput(event)
+FUC -> FUC: alert('Please upload a question file that has the word question in its name and a answer file with any name.')
+FUC -> FUC: fileInput.nativeElement.click()
 
-User -> FileUploadComponent: onQuestionSelected(event)
-FileUploadComponent -> FileUploadComponent: parseFile(file)
-alt file name includes 'question'
-    FileUploadComponent -> FileUploadComponent: readQuestion(file)
-    FileUploadComponent -> fileTransferring: questionTransfer(file)
-    fileTransferring -> fileTransferring: next(file)
-else file name does not include 'question'
-    FileUploadComponent -> User: alert error message
+User -> FUC: onQuestionSelected(event)
+FUC -> FUC: parseFile(file)
+alt file is a question file
+    FUC -> FUC: readQuestion(file)
+    FUC -> FTS: questionTransfer(file)
+else file is not a question file
+    FUC -> User: alert('Error: None of the files have the word question in it. Please upload a question file that has the word question in it')
 end
-FileUploadComponent -> ElementRef: fileInput.nativeElement.value = ''
+FUC -> FUC: onFileChange()
 
-User -> FileUploadComponent: onFilesSelected(event)
-FileUploadComponent -> FileUploadComponent: parseFiles(files)
+User -> FUC: onFilesSelected(event)
+FUC -> FUC: parseFiles(files)
 alt totalFiles > maxFiles
-    FileUploadComponent -> User: alert max files error
-else totalFiles <= maxFiles
-    alt files contain a question file
-        alt no answer files
-            FileUploadComponent -> FileUploadComponent: popAll()
-            FileUploadComponent -> User: alert error message
-        else contains answer files
-            FileUploadComponent -> FileUploadComponent: confirmDialog(message)
-            FileUploadComponent -> User: showConfirmDialog
-            User -> FileUploadComponent: handleConfirm(result)
-            alt result is true
-                FileUploadComponent -> FileUploadComponent: readQuestion(questionFiles[0])
-                FileUploadComponent -> fileTransferring: questionTransfer(questionFiles[0])
-                fileTransferring -> fileTransferring: next(questionFiles[0])
-                FileUploadComponent -> FileUploadComponent: readFile(answerFiles[0])
-                FileUploadComponent -> fileTransferring: fileTransfer(answerFiles[0])
-                fileTransferring -> fileTransferring: next(answerFiles[0])
-                FileUploadComponent -> FileUploadComponent: popAll()
-            end
+    FUC -> User: alert('You can only upload a maximum of ${this.maxFiles} files.')
+else totalFiles == 1
+    FUC -> User: alert('Error: Only one file selected. Please select two files')
+else files are valid
+    alt no answer files
+        FUC -> FUC: popAll()
+        FUC -> User: alert('Error: None of the files are answer files. Files submitted are all question files')
+    else answer and question files present
+        FUC -> FUC: confirmDialog('Do you want to send the chosen files: ' + this.questionFileNames[0] + " " + this.fileNames[0])
+        FUC -> FUC: handleConfirm(result)
+        alt result is true
+            FUC -> FUC: readQuestion(this.questionFiles[0])
+            FUC -> FTS: questionTransfer(this.questionFiles[0])
+            FUC -> FUC: readFile(this.answerFiles[0])
+            FUC -> FTS: fileTransfer(this.answerFiles[0])
+            FUC -> FUC: popAll()
+        else result is false
+            FUC -> FUC: popAll()
         end
-    else no question files
-        FileUploadComponent -> User: alert error message
-        FileUploadComponent -> FileUploadComponent: popAll()
     end
 end
-FileUploadComponent -> ElementRef: fileInput.nativeElement.value = ''
+FUC -> FUC: onFileChange()
 
 @enduml

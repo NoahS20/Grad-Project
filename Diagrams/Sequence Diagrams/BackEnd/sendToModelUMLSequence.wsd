@@ -10,23 +10,29 @@ participant replicateLlama3APICall
 participant os
 participant time
 
-User -> sendFile_and_ChatGPTResponse: call sendFile_and_ChatGPTResponse(file_content)
-sendFile_and_ChatGPTResponse -> readtxt: call readtxt('.\Temp_Save\questionsFORAI129.txt')
+User -> sendFile_and_ChatGPTResponse: sendFile_and_ChatGPTResponse(file_content)
+sendFile_and_ChatGPTResponse -> readtxt: readtxt('.\\Temp_Save\\questionsFORAI129.txt')
 readtxt -> os: os.path.isfile(file_path)
-alt file does not exist
-    readtxt -> time: time.sleep(5)
-else file exists
-    readtxt -> readtxt: open file_path in read mode
-    readtxt -> file: read lines
-    readtxt -> sendFile_and_ChatGPTResponse: return contents
+alt file exists
+    readtxt -> checkIfDOne: checkIfDOne(file_path)
+    checkIfDOne -> os: os.path.isfile(file_path)
+    alt file does not exist
+        checkIfDOne -> time: time.sleep(5)
+    else file exists
+        checkIfDOne -> readtxt: return
+        readtxt -> readtxt: open file and read contents
+        readtxt -> sendFile_and_ChatGPTResponse: return contents
+    end
+else file does not exist
+    readtxt -> User: return "Error: The file at {file_path} was not found."
 end
 
-alt questions is empty
-    sendFile_and_ChatGPTResponse -> User: return "Please upload a question before sending answers."
+alt "Error: Invalid" in file_content
+    sendFile_and_ChatGPTResponse -> User: return file_content
 else "Error: Invalid" in questions
     sendFile_and_ChatGPTResponse -> User: return questions
-else "Error: Invalid" in file_content
-    sendFile_and_ChatGPTResponse -> User: return file_content
+else questions is empty
+    sendFile_and_ChatGPTResponse -> User: return "Please upload a valid question file before sending answers."
 else valid questions and file_content
     sendFile_and_ChatGPTResponse -> getAIResponse: send_request(questions)
     getAIResponse -> sendFile_and_ChatGPTResponse: return AIresponse
@@ -35,15 +41,21 @@ else valid questions and file_content
     sendFile_and_ChatGPTResponse -> User: return verdict
 end
 
-User -> sendTypedResponse_and_ChatGPTResponse: call sendTypedResponse_and_ChatGPTResponse(student_answer)
-sendTypedResponse_and_ChatGPTResponse -> readtxt: call readtxt('.\Temp_Save\questionsFORAI129.txt')
+User -> sendTypedResponse_and_ChatGPTResponse: sendTypedResponse_and_ChatGPTResponse(student_answer)
+sendTypedResponse_and_ChatGPTResponse -> readtxt: readtxt('.\\Temp_Save\\questionsFORAI129.txt')
 readtxt -> os: os.path.isfile(file_path)
-alt file does not exist
-    readtxt -> time: time.sleep(5)
-else file exists
-    readtxt -> readtxt: open file_path in read mode
-    readtxt -> file: read lines
-    readtxt -> sendTypedResponse_and_ChatGPTResponse: return contents
+alt file exists
+    readtxt -> checkIfDOne: checkIfDOne(file_path)
+    checkIfDOne -> os: os.path.isfile(file_path)
+    alt file does not exist
+        checkIfDOne -> time: time.sleep(5)
+    else file exists
+        checkIfDOne -> readtxt: return
+        readtxt -> readtxt: open file and read contents
+        readtxt -> sendTypedResponse_and_ChatGPTResponse: return contents
+    end
+else file does not exist
+    readtxt -> User: return "Error: The file at {file_path} was not found."
 end
 
 alt questions is empty
