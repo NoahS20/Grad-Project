@@ -42,7 +42,9 @@ export class FileUploadComponent{
   onQuestionSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file) {
-      this.readQuestion(file);
+      if(this.parseFile(file)){
+        this.readQuestion(file);
+      }
     }
     this.onFileChange()
   }
@@ -54,9 +56,12 @@ export class FileUploadComponent{
     if (totalFiles > this.maxFiles) {
       alert(`You can only upload a maximum of ${this.maxFiles} files.`);
     }
-
     else{
       if(this.parseFiles(files)){
+        if(this.fileNames === undefined || this.fileNames.length == 0){
+          alert('Error: None of the files are answer files. Files submitted are all question files')
+          return
+        }
         this.confirmDialog('Do you want to send the chosen files: ' + this.questionFileNames[0] + " " + this.fileNames[0]).then(result => {
           if (result) {
             this.readQuestion(this.questionFiles[0]);
@@ -69,7 +74,7 @@ export class FileUploadComponent{
         });
       }
       else{
-        alert('Error: None of the files ahd the word question in it. Please upload a question file that has the word question in it');
+        alert('Error: None of the files have the word question in it. Please upload a question file that has the word question in it');
       }
     }
     this.onFileChange()
@@ -87,12 +92,28 @@ export class FileUploadComponent{
         this.answerFiles.push(file)
       }
     });
-    if(this.questionFileNames === undefined || this.questionFileNames.length == 0 || this.fileNames === undefined || this.fileNames.length == 0 ){
+    if(this.questionFileNames === undefined || this.questionFileNames.length == 0 ){
       console.log(this.questionFileNames)
       console.log(this.fileNames);
       this.questionFileNames.pop();
       this.fileNames.pop();
       this.answerFiles.pop();
+      this.questionFiles.pop();
+      return false
+    }
+    else{
+      return true
+    }
+  }
+
+  parseFile(file: File): boolean{
+    if (file.name.toLowerCase().includes('question')) {
+      this.questionFileNames.push(file.name);
+      this.questionFiles.push(file)
+     }
+    if(this.questionFileNames === undefined || this.questionFileNames.length == 0){
+      alert('Error: None of the files have the word question in it. Please upload a question file that has the word question in it');
+      this.questionFileNames.pop();
       this.questionFiles.pop();
       return false
     }

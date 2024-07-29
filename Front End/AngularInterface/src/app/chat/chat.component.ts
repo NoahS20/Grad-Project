@@ -106,7 +106,7 @@ export class ChatComponent implements AfterViewChecked{
 
   ngAfterViewChecked() {
     if(this.firstTime == true){
-      this.messages.push({ text: 'PLEASE READ: Upload a question and answer by clicking the paperclip button. Or, type an answer below first, then choose a question!', user: false });
+      this.messages.push({ text: 'PLEASE READ: Upload a question and answer by clicking the paperclip button. Or, type an answer below first, and then choose a question! Question files must be text files (.txt). Answer files must be either text, pdf, or word files (.txt, .pdf, .doc, or .docx).', user: false });
       this.firstTime = false;
     }
   }
@@ -204,6 +204,9 @@ export class ChatComponent implements AfterViewChecked{
           response => {
             console.log('File uploaded successfully', response);
             this.respond(response.Verdict)
+            if (response.Verdict != undefined || response.Verdict != null || response.Verdict != ""){
+              this.loading = false;
+            }
           },
           error => {
             console.error('Error uploading file', error);
@@ -228,7 +231,6 @@ export class ChatComponent implements AfterViewChecked{
     this.showConfirmDialog = false;
     this.confirmResolve(result);
   }
-
 
 
 }

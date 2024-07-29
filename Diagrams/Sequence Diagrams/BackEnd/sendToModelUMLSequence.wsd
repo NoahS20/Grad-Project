@@ -23,7 +23,11 @@ end
 
 alt questions is empty
     sendFile_and_ChatGPTResponse -> User: return "Please upload a question before sending answers."
-else questions is not empty
+else "Error: Invalid" in questions
+    sendFile_and_ChatGPTResponse -> User: return questions
+else "Error: Invalid" in file_content
+    sendFile_and_ChatGPTResponse -> User: return file_content
+else valid questions and file_content
     sendFile_and_ChatGPTResponse -> getAIResponse: send_request(questions)
     getAIResponse -> sendFile_and_ChatGPTResponse: return AIresponse
     sendFile_and_ChatGPTResponse -> replicateLlama3APICall: askLlama3(file_content, AIresponse, questions)
@@ -44,7 +48,9 @@ end
 
 alt questions is empty
     sendTypedResponse_and_ChatGPTResponse -> User: return "Please upload a question before sending answers."
-else questions is not empty
+else "Error: Invalid" in questions
+    sendTypedResponse_and_ChatGPTResponse -> User: return questions
+else valid questions
     sendTypedResponse_and_ChatGPTResponse -> getAIResponse: send_request(questions)
     getAIResponse -> sendTypedResponse_and_ChatGPTResponse: return AIresponse
     sendTypedResponse_and_ChatGPTResponse -> replicateLlama3APICall: askLlama3(student_answer, AIresponse, questions)

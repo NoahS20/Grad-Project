@@ -2,37 +2,46 @@
 actor User
 
 participant FileUploadComponent
-participant fileTransferring
 participant ElementRef
+participant fileTransferring
 
 User -> FileUploadComponent: triggerFileInput(event)
 FileUploadComponent -> FileUploadComponent: alert message
-FileUploadComponent -> fileInput: click()
+FileUploadComponent -> ElementRef: fileInput.nativeElement.click()
 
 User -> FileUploadComponent: onQuestionSelected(event)
-FileUploadComponent -> FileUploadComponent: readQuestion(file)
-FileUploadComponent -> fileTransferring: questionTransfer(file)
-fileTransferring -> questionSource: next(file)
-FileUploadComponent -> FileUploadComponent: onFileChange()
+FileUploadComponent -> FileUploadComponent: parseFile(file)
+alt file name includes 'question'
+    FileUploadComponent -> FileUploadComponent: readQuestion(file)
+    FileUploadComponent -> fileTransferring: questionTransfer(file)
+    fileTransferring -> fileTransferring: next(file)
+else file name does not include 'question'
+    FileUploadComponent -> User: alert error message
+end
+FileUploadComponent -> ElementRef: fileInput.nativeElement.value = ''
 
 User -> FileUploadComponent: onFilesSelected(event)
 FileUploadComponent -> FileUploadComponent: parseFiles(files)
 alt totalFiles > maxFiles
-    FileUploadComponent -> User: alert("You can only upload a maximum of 2 files.")
+    FileUploadComponent -> User: alert max files error
 else totalFiles <= maxFiles
-    FileUploadComponent -> FileUploadComponent: confirmDialog("Do you want to send the chosen files: " + questionFileNames[0] + " " + fileNames[0])
-    FileUploadComponent -> User: showConfirmDialog
-    User -> FileUploadComponent: handleConfirm(result)
-    alt result is true
-        FileUploadComponent -> FileUploadComponent: readQuestion(questionFiles[0])
-        FileUploadComponent -> fileTransferring: questionTransfer(questionFiles[0])
-        fileTransferring -> questionSource: next(questionFiles[0])
-        FileUploadComponent -> FileUploadComponent: readFile(answerFiles[0])
-        FileUploadComponent -> fileTransferring: fileTransfer(answerFiles[0])
-        fileTransferring -> dataSource: next(answerFiles[0])
+    alt files contain a question file
+        FileUploadComponent -> FileUploadComponent: confirmDialog(message)
+        FileUploadComponent -> User: showConfirmDialog
+        User -> FileUploadComponent: handleConfirm(result)
+        alt result is true
+            FileUploadComponent -> FileUploadComponent: readQuestion(questionFiles[0])
+            FileUploadComponent -> fileTransferring: questionTransfer(questionFiles[0])
+            fileTransferring -> fileTransferring: next(questionFiles[0])
+            FileUploadComponent -> FileUploadComponent: readFile(answerFiles[0])
+            FileUploadComponent -> fileTransferring: fileTransfer(answerFiles[0])
+            fileTransferring -> fileTransferring: next(answerFiles[0])
+            FileUploadComponent -> FileUploadComponent: pop questionFileNames, fileNames, answerFiles, questionFiles
+        end
+    else files do not contain a question file
+        FileUploadComponent -> User: alert error message
     end
-    FileUploadComponent -> FileUploadComponent: pop questionFileNames, fileNames, answerFiles, questionFiles
 end
-FileUploadComponent -> FileUploadComponent: onFileChange()
+FileUploadComponent -> ElementRef: fileInput.nativeElement.value = ''
 
 @enduml

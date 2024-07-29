@@ -80,5 +80,8 @@ ApiService -> HttpClient: POST /api/upload
 HttpClient -> ApiService: return response
 ApiService -> ChatComponent: return response
 ChatComponent -> ChatComponent: respond(response.Verdict)
+alt response.Verdict is not empty
+    ChatComponent -> ChatComponent: loading = false
+end
 
 @enduml
