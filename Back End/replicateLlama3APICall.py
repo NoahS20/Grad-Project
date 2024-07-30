@@ -3,7 +3,6 @@ import replicate
 
 def askLlama3(user_input, ai_input, questions):
     formatted_content = ""
-    api = replicate.Client(api_token=os.environ["REPLICATE_API_TOKEN"])
     content = api.run(
         "meta/meta-llama-3-70b-instruct",
         input={

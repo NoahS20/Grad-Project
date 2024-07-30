@@ -1,11 +1,11 @@
 @startuml
-actor User
+actor Professor
 
 participant askLlama3
 participant os
 participant replicate.Client
 
-User -> askLlama3: call askLlama3(user_input, ai_input, questions)
+Professor -> askLlama3: call askLlama3(Professor_input, ai_input, questions)
 askLlama3 -> os: set REPLICATE_API_TOKEN environment variable
 askLlama3 -> replicate.Client: create Client with API token
 replicate.Client -> askLlama3: return Client instance
@@ -16,5 +16,5 @@ loop process content
     askLlama3 -> askLlama3: format content
 end
 
-askLlama3 -> User: return formatted_content
+askLlama3 -> Professor: return formatted_content
 @enduml

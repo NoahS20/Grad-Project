@@ -1,11 +1,11 @@
 @startuml
-actor User
+actor Professor
 
 participant send_request
 participant OpenAI
 participant client.chat.completions
 
-User -> send_request: call send_request(questions)
+Professor -> send_request: call send_request(questions)
 send_request -> OpenAI: create OpenAI client with api_key
 OpenAI -> send_request: return client instance
 send_request -> client.chat.completions: create(model, messages, stream=True)
@@ -19,5 +19,5 @@ loop process stream
 end
 
 send_request -> send_request: response.rstrip('\n')
-send_request -> User: return response
+send_request -> Professor: return response
 @enduml

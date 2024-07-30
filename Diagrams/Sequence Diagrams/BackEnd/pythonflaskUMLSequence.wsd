@@ -1,5 +1,5 @@
 @startuml
-actor User
+actor Professor
 
 participant FlaskApp as app
 participant FlaskRequest as request
@@ -9,7 +9,7 @@ participant questionprocessing
 participant os
 participant jsonify
 
-User -> app: POST /api/data
+Professor -> app: POST /api/data
 app -> FlaskRequest: request.is_json
 alt request is JSON
     FlaskRequest -> FlaskRequest: get_json()
@@ -19,22 +19,22 @@ alt request is JSON
     FlaskRequest -> questionprocessing: eraseQuestion()
     questionprocessing -> questionprocessing: process erase
     FlaskRequest -> jsonify: jsonify({"Verdict": data})
-    jsonify -> User: return response
+    jsonify -> Professor: return response
 else request is not JSON
     FlaskRequest -> questionprocessing: eraseQuestion()
     questionprocessing -> questionprocessing: process erase
     FlaskRequest -> jsonify: jsonify({"error": "Invalid content type, must be application/json"})
-    jsonify -> User: return 400 error
+    jsonify -> Professor: return 400 error
 end
 
-User -> app: POST /api/upload
+Professor -> app: POST /api/upload
 app -> FlaskRequest: request.is_json
 alt request is JSON
     FlaskRequest -> FlaskRequest: get_json()
     FlaskRequest -> FlaskRequest: get file details
     alt file details missing
         FlaskRequest -> jsonify: jsonify({"error": "Invalid request, missing fileName or fileContent"})
-        jsonify -> User: return 400 error
+        jsonify -> Professor: return 400 error
     else file details present
         FlaskRequest -> os: os.path.join('Temp_Save', file_name)
         FlaskRequest -> fileprocessing: readFile(file_content, file_path, file_name)
@@ -47,23 +47,23 @@ alt request is JSON
         FlaskRequest -> questionprocessing: eraseQuestion()
         questionprocessing -> questionprocessing: process erase
         FlaskRequest -> jsonify: jsonify({"Verdict": verdict})
-        jsonify -> User: return response
+        jsonify -> Professor: return response
     end
 else request is not JSON
     FlaskRequest -> questionprocessing: eraseQuestion()
     questionprocessing -> questionprocessing: process erase
     FlaskRequest -> jsonify: jsonify({"error": "Invalid content type, must be application/json"})
-    jsonify -> User: return 400 error
+    jsonify -> Professor: return 400 error
 end
 
-User -> app: POST /api/question
+Professor -> app: POST /api/question
 app -> FlaskRequest: request.is_json
 alt request is JSON
     FlaskRequest -> FlaskRequest: get_json()
     FlaskRequest -> FlaskRequest: get question details
     alt question details missing
         FlaskRequest -> jsonify: jsonify({"error": "Invalid request, missing question name or file content"})
-        jsonify -> User: return 400 error
+        jsonify -> Professor: return 400 error
     else question details present
         FlaskRequest -> os: os.path.join('Temp_Save', file_name)
         FlaskRequest -> questionprocessing: readFile(file_content, file_path, file_name)
@@ -73,21 +73,21 @@ alt request is JSON
             FlaskRequest -> os: os.remove(file_path)
         end
         FlaskRequest -> jsonify: jsonify({"Result": result})
-        jsonify -> User: return response
+        jsonify -> Professor: return response
     end
 else request is not JSON
     FlaskRequest -> jsonify: jsonify({"error": "Invalid content type, must be application/json"})
-    jsonify -> User: return 400 error
+    jsonify -> Professor: return 400 error
 end
 
-User -> app: POST /api/upload_python
+Professor -> app: POST /api/upload_python
 app -> FlaskRequest: request.is_json
 alt request is JSON
     FlaskRequest -> FlaskRequest: get_json()
     FlaskRequest -> FlaskRequest: get question details
     alt question details missing
         FlaskRequest -> jsonify: jsonify({"error": "Invalid request, missing question name or Question Content"})
-        jsonify -> User: return 400 error
+        jsonify -> Professor: return 400 error
     else question details present
         FlaskRequest -> os: os.path.join('Temp_Save', file_name)
         FlaskRequest -> questionprocessing: readFile(file_content, file_path, file_name)
@@ -100,7 +100,7 @@ alt request is JSON
         FlaskRequest -> FlaskRequest: get answer details
         alt answer details missing
             FlaskRequest -> jsonify: jsonify({"error": "Invalid request, missing fileName or fileContent"})
-            jsonify -> User: return 400 error
+            jsonify -> Professor: return 400 error
         else answer details present
             FlaskRequest -> os: os.path.join('Temp_Save', file_name)
             FlaskRequest -> fileprocessing: readFile(file_content, file_path, file_name)
@@ -113,12 +113,12 @@ alt request is JSON
             FlaskRequest -> questionprocessing: eraseQuestion()
             questionprocessing -> questionprocessing: process erase
             FlaskRequest -> jsonify: jsonify({"Verdict": verdict})
-            jsonify -> User: return response
+            jsonify -> Professor: return response
         end
     end
 else request is not JSON
     FlaskRequest -> jsonify: jsonify({"error": "Invalid content type, must be application/json"})
-    jsonify -> User: return 400 error
+    jsonify -> Professor: return 400 error
 end
 
 @enduml

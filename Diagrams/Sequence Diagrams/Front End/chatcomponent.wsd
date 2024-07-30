@@ -1,5 +1,5 @@
 @startuml
-actor User
+actor Professor
 
 participant ChatComponent
 participant fileTransferring
@@ -9,48 +9,48 @@ participant FileReader
 participant ElementRef
 participant HttpClient
 
-User -> ChatComponent: sendMessage(textarea)
+Professor -> ChatComponent: sendMessage(textarea)
 ChatComponent -> ChatComponent: loading = true
 ChatComponent -> ChatComponent: scrollToBottom()
 alt inputMessage.trim() is not empty
-    ChatComponent -> ChatComponent: messages.push({ text: inputMessage, user: true })
+    ChatComponent -> ChatComponent: messages.push({ text: inputMessage, Professor: true })
     ChatComponent -> ChatComponent: sendData(inputMessage)
     ChatComponent -> ApiService: postData(inputMessage)
     ApiService -> HttpClient: POST /api/data
     HttpClient -> ApiService: return response
     ApiService -> ChatComponent: return response
     ChatComponent -> ChatComponent: respond(response.Verdict)
-    ChatComponent -> ChatComponent: messages.push({ text: response.Verdict, user: false })
+    ChatComponent -> ChatComponent: messages.push({ text: response.Verdict, Professor: false })
     ChatComponent -> ChatComponent: scrollToBottom()
     ChatComponent -> ChatComponent: inputMessage = ''
     ChatComponent -> textarea: textarea.style.height = '38px'
     ChatComponent -> ChatComponent: loading = false
 end
 
-User -> ChatComponent: confirmQuestionText(textarea)
+Professor -> ChatComponent: confirmQuestionText(textarea)
 alt checkEmpty(textarea) is true
     ChatComponent -> ChatComponent: confirmDialog('Would like to send this answer and select a question file for this answer?')
-    ChatComponent -> User: showConfirmDialog
-    User -> ChatComponent: handleConfirm(result)
+    ChatComponent -> Professor: showConfirmDialog
+    Professor -> ChatComponent: handleConfirm(result)
     alt result is true
         ChatComponent -> ChatComponent: openQuestionDialog()
         ChatComponent -> ChatComponent: savedText = textarea
     end
 end
 
-User -> ChatComponent: onEnterKeyPress(event, textarea)
+Professor -> ChatComponent: onEnterKeyPress(event, textarea)
 ChatComponent -> event: event.preventDefault()
 alt checkEmpty(textarea) is true
     ChatComponent -> ChatComponent: confirmDialog('Would you like to send this answer and select a question for this answer?')
-    ChatComponent -> User: showConfirmDialog
-    User -> ChatComponent: handleConfirm(result)
+    ChatComponent -> Professor: showConfirmDialog
+    Professor -> ChatComponent: handleConfirm(result)
     alt result is true
         ChatComponent -> ChatComponent: openQuestionDialog()
         ChatComponent -> ChatComponent: savedText = textarea
     end
 end
 
-User -> ChatComponent: openQuestionDialog()
+Professor -> ChatComponent: openQuestionDialog()
 ChatComponent -> document: document.getElementById("questionInput")
 alt questionInput exists
     ChatComponent -> questionInput: questionInput.click()

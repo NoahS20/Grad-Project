@@ -1,5 +1,5 @@
 @startuml
-actor User
+actor Professor
 
 participant sendFile_and_ChatGPTResponse
 participant sendTypedResponse_and_ChatGPTResponse
@@ -10,7 +10,7 @@ participant replicateLlama3APICall
 participant os
 participant time
 
-User -> sendFile_and_ChatGPTResponse: sendFile_and_ChatGPTResponse(file_content)
+Professor -> sendFile_and_ChatGPTResponse: sendFile_and_ChatGPTResponse(file_content)
 sendFile_and_ChatGPTResponse -> readtxt: readtxt('.\\Temp_Save\\questionsFORAI129.txt')
 readtxt -> os: os.path.isfile(file_path)
 alt file exists
@@ -24,24 +24,24 @@ alt file exists
         readtxt -> sendFile_and_ChatGPTResponse: return contents
     end
 else file does not exist
-    readtxt -> User: return "Error: The file at {file_path} was not found."
+    readtxt -> Professor: return "Error: The file at {file_path} was not found."
 end
 
 alt "Error: Invalid" in file_content
-    sendFile_and_ChatGPTResponse -> User: return file_content
+    sendFile_and_ChatGPTResponse -> Professor: return file_content
 else "Error: Invalid" in questions
-    sendFile_and_ChatGPTResponse -> User: return questions
+    sendFile_and_ChatGPTResponse -> Professor: return questions
 else questions is empty
-    sendFile_and_ChatGPTResponse -> User: return "Please upload a valid question file before sending answers."
+    sendFile_and_ChatGPTResponse -> Professor: return "Please upload a valid question file before sending answers."
 else valid questions and file_content
     sendFile_and_ChatGPTResponse -> getAIResponse: send_request(questions)
     getAIResponse -> sendFile_and_ChatGPTResponse: return AIresponse
     sendFile_and_ChatGPTResponse -> replicateLlama3APICall: askLlama3(file_content, AIresponse, questions)
     replicateLlama3APICall -> sendFile_and_ChatGPTResponse: return verdict
-    sendFile_and_ChatGPTResponse -> User: return verdict
+    sendFile_and_ChatGPTResponse -> Professor: return verdict
 end
 
-User -> sendTypedResponse_and_ChatGPTResponse: sendTypedResponse_and_ChatGPTResponse(student_answer)
+Professor -> sendTypedResponse_and_ChatGPTResponse: sendTypedResponse_and_ChatGPTResponse(student_answer)
 sendTypedResponse_and_ChatGPTResponse -> readtxt: readtxt('.\\Temp_Save\\questionsFORAI129.txt')
 readtxt -> os: os.path.isfile(file_path)
 alt file exists
@@ -55,19 +55,19 @@ alt file exists
         readtxt -> sendTypedResponse_and_ChatGPTResponse: return contents
     end
 else file does not exist
-    readtxt -> User: return "Error: The file at {file_path} was not found."
+    readtxt -> Professor: return "Error: The file at {file_path} was not found."
 end
 
 alt questions is empty
-    sendTypedResponse_and_ChatGPTResponse -> User: return "Please upload a question before sending answers."
+    sendTypedResponse_and_ChatGPTResponse -> Professor: return "Please upload a question before sending answers."
 else "Error: Invalid" in questions
-    sendTypedResponse_and_ChatGPTResponse -> User: return questions
+    sendTypedResponse_and_ChatGPTResponse -> Professor: return questions
 else valid questions
     sendTypedResponse_and_ChatGPTResponse -> getAIResponse: send_request(questions)
     getAIResponse -> sendTypedResponse_and_ChatGPTResponse: return AIresponse
     sendTypedResponse_and_ChatGPTResponse -> replicateLlama3APICall: askLlama3(student_answer, AIresponse, questions)
     replicateLlama3APICall -> sendTypedResponse_and_ChatGPTResponse: return verdict
-    sendTypedResponse_and_ChatGPTResponse -> User: return verdict
+    sendTypedResponse_and_ChatGPTResponse -> Professor: return verdict
 end
 
 @enduml
