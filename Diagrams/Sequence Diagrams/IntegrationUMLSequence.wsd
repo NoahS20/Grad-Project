@@ -1,35 +1,29 @@
 @startuml
-actor User
-
+actor Professor
 participant sendFile
 participant readtxt
 participant sendQuestionAnswer
 participant requests
 
 User -> sendFile: call sendFile(question_file_name, question_file_path, answer_file_name, answer_file_path)
-sendFile -> readtxt: readtxt(question_file_path)
+sendFile -> readtxt: call readtxt(question_file_path)
 readtxt -> readtxt: read file content
-readtxt -> sendFile: return question content
+readtxt --> sendFile: return questioncontent
 
-sendFile -> readtxt: readtxt(answer_file_path)
+sendFile -> readtxt: call readtxt(answer_file_path)
 readtxt -> readtxt: read file content
-readtxt -> sendFile: return answer content
+readtxt --> sendFile: return answercontent
 
-sendFile -> sendQuestionAnswer: sendQuestionAnswer(url, question_file_name, question_content, answer_file_name, answer_content)
-sendQuestionAnswer -> base64: encode question_content
-sendQuestionAnswer -> base64: encode answer_content
-sendQuestionAnswer -> sendQuestionAnswer: prepare data
-sendQuestionAnswer -> requests: requests.post(url + '/api/upload_python', data, headers, verify)
-requests -> requests: send HTTP POST request
-requests -> sendQuestionAnswer: return response
+sendFile -> sendQuestionAnswer: call sendQuestionAnswer(url, question_file_name, questioncontent, answer_file_name, answercontent)
+sendQuestionAnswer -> sendQuestionAnswer: encode question_content and answer_content in base64
 
-alt response is successful
-    sendQuestionAnswer -> sendQuestionAnswer: response.json()
-    sendQuestionAnswer -> sendFile: return verdict
-else response has an error
-    sendQuestionAnswer -> sendQuestionAnswer: handle exception
-    sendQuestionAnswer -> sendFile: return error message
-end
+sendQuestionAnswer -> requests: send POST request to url/api/upload_python
+requests -> requests: process request
+requests --> sendQuestionAnswer: return response
 
-sendFile -> User: return response
+sendQuestionAnswer -> sendQuestionAnswer: parse response
+sendQuestionAnswer --> sendFile: return verdict
+
+sendFile --> User: return response
+
 @enduml
