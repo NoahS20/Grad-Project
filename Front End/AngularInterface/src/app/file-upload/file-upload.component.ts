@@ -43,6 +43,7 @@ export class FileUploadComponent{
     const file: File = event.target.files[0];
     if (file) {
       if(this.parseFile(file)){
+        this.questionInput.nativeElement.value = '';
         this.readQuestion(file);
       }
     }
