@@ -14,7 +14,7 @@
   transition: background-color 0.3s; /* Smooth transition for hover effect */
   font-family: "Times New Roman";
   font-size: 16px;
-  position: fixed;
+  position: absolute;
   right: 610px;
   top: 63px;
 }
