@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { AutoResizeDirective } from './directives/auto-resize.directive';  // Import the directive here
 import { ApiService } from './api.service';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,11 +23,10 @@ import { MatButtonModule } from '@angular/material/button';
     BrowserModule,
     RouterModule,
     FormsModule,
-    HttpClientModule,
     MatButtonModule,
     MatIconModule
   ],
-  providers: [ApiService, provideAnimationsAsync()],
+  providers: [ApiService, provideAnimationsAsync(), provideHttpClient(withFetch())],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

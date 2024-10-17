@@ -1,6 +1,6 @@
 /* Set the background color of the whole page */
 body {
-  background:url(../assets/towsonuniversity3.jpg)no-repeat center center fixed;
+  background:url(/assets/icons/towsonuniversity3.jpg)no-repeat center center fixed;
   background-size: cover;  /* Cover the entire page */
   background-position: center;  /* Center the background image */
   background-repeat: no-repeat;  /* Do not repeat the image */
